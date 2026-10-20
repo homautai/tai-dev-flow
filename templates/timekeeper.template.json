@@ -1,0 +1,130 @@
+{
+  "$comment": "PERSONAL file: copy to ~/.dev-flow/timekeeper.json. No secrets here — Timekeeper and SRM tokens stay in the browser session. Values below come from the original timekeeper-logwork skill (SiliconStack); adjust per person.",
+  "timekeeper": {
+    "url": "https://timekeeper.siliconstack.com.au",
+    "userId": "YOUR-TIMEKEEPER-USER-GUID",
+    "$auth": "Session cookie from the Microsoft login. All calls run with fetch() inside the logged-in Timekeeper tab; nothing is stored.",
+    "postPath": "/data/post?uri=entry",
+    "reportPathTemplate": "/data/get?uri=reports/single-column?filterExp=(startDate Eq `{start}`)and(endDate Eq `{end}`)and(lstUsers In `{userId}`)and(isBillable Eq `2`)and(isOvertime Eq `2`)and(typeChart Eq `column-chart`)and(groupBy In `CustomerName`)",
+    "lookupPaths": {
+      "activityTypes": "/data/get?uri=activitycode",
+      "reportingCodes": "/data/get?uri=reportingcode",
+      "customers": "/data/get?uri=customer"
+    },
+    "dateFormat": "MM/dd/yyyy",
+    "postChunkSize": 60,
+    "entryFields": {
+      "$comment": "Planner field -> Timekeeper JSON field(s). A list writes the same value to several fields. Verified against a real POST body (startDateTime/endDateTime = same day, duration = hours, ids as strings).",
+      "date": [
+        "startDateTime",
+        "endDateTime"
+      ],
+      "hours": "duration",
+      "customerId": "customerID",
+      "reportingCodeId": "reportingCodeID",
+      "activityTypeId": "activityTypeID",
+      "description": "description",
+      "ticketNumber": "ticketNumber",
+      "ticketLink": "ticketLink",
+      "isBillable": "isBillable",
+      "isOvertime": "isOvertime"
+    },
+    "entryDefaults": {
+      "reference": ""
+    },
+    "idsAsStrings": true
+  },
+  "srm": {
+    "url": "https://srm.siliconstack.com.au",
+    "api": "https://srm-api.siliconstack.com.au",
+    "tokenLocalStorageKey": "accessToken",
+    "ignoreLeaveTypes": [
+      "Work From Home"
+    ]
+  },
+  "workday": {
+    "hours": 8,
+    "days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri"
+    ],
+    "unit": 0.5
+  },
+  "codes": {
+    "paidLeave": {
+      "customerId": 50,
+      "reportingCodeId": 14,
+      "activityTypeId": 3,
+      "description": "Paid Leave",
+      "halfDayDescription": "Paid Leave (half day)"
+    },
+    "publicHoliday": {
+      "customerId": 50,
+      "reportingCodeId": 14,
+      "activityTypeId": 28,
+      "description": "Public Holiday"
+    },
+    "activityTypes": {
+      "bug": 1,
+      "task": 2,
+      "meeting": 3,
+      "crEnhancement": 4,
+      "ba": 5,
+      "codeReview": 6,
+      "otherMeeting": 16,
+      "leaveRequest": 24,
+      "publicHoliday": 28
+    }
+  },
+  "sources": [
+    {
+      "name": "WeCRM",
+      "from": "2000-01-01",
+      "to": "2026-08-31",
+      "jiraSite": "https://siliconstack.atlassian.net",
+      "rovoCloudId": "8e4c9e9d-f2fa-4ea1-8708-55d3a201941d",
+      "jql": "project = WEC AND (assignee was currentUser() DURING (\"{start}\", \"{end}\") OR (worklogAuthor = currentUser() AND worklogDate >= \"{start}\" AND worklogDate <= \"{end}\"))",
+      "customerId": 85,
+      "reportingCodeId": 175,
+      "activityRule": "bugOrBugSubtask=1, else 2",
+      "descriptionFormat": "[WeCRM] {key} {summary}",
+      "preferBackendSubtask": true,
+      "meetings": [
+        {
+          "description": "[WeCRM] Daily Meeting",
+          "hours": 1,
+          "every": "workday",
+          "activityTypeId": 3,
+          "from": "2026-01-01",
+          "to": "2026-04-30"
+        }
+      ]
+    },
+    {
+      "name": "Pentana Integrations",
+      "from": "2026-09-01",
+      "to": null,
+      "jiraSite": "https://pentana-solutions.atlassian.net",
+      "rovoCloudId": null,
+      "jql": "project = NTGRTN AND (assignee was currentUser() DURING (\"{start}\", \"{end}\") OR (worklogAuthor = currentUser() AND worklogDate >= \"{start}\" AND worklogDate <= \"{end}\"))",
+      "customerId": 44,
+      "reportingCodeId": 314,
+      "activityRule": "2",
+      "descriptionFormat": "[Pentana] Integrations - {key} {summary}",
+      "preferBackendSubtask": true,
+      "skip": "Story/Requirement in Analysis Complete, FE/QA sub-tasks, To Do items",
+      "meetings": [
+        {
+          "description": "[Pentana] Integrations - Weekly Standup",
+          "hours": 1,
+          "every": "firstWorkdayOfWeek",
+          "activityTypeId": 3
+        }
+      ]
+    }
+  ],
+  "meetingsHelp": "Each meeting may have optional from/to (yyyy-MM-dd) to limit when it applies."
+}

@@ -1,0 +1,18 @@
+# Secrets and personal config — never commit
+credentials.json
+config_swagger.json
+.jira/config.json
+*.secret.json
+.env
+.env.*
+
+# Caches and fetched data
+.dev-flow/cache/
+.jira/cache/
+*.diff
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

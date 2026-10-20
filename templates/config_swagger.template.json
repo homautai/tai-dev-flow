@@ -1,0 +1,30 @@
+{
+  "$comment": "PERSONAL file, git-ignored, one per project at apiTest.configFile. Each project fills its own URLs and login info. Tokens are captured from a browser login and saved by save-token.ps1 — never typed into chat.",
+  "swaggerPath": "/swagger/v1/swagger.json",
+  "environments": {
+    "local": {
+      "baseUrl": "https://localhost:5001",
+      "login": { "url": "https://localhost:4200", "tokenFrom": "", "tokenKey": "" },
+      "bearerToken": ""
+    },
+    "dev": {
+      "baseUrl": "https://dev-api.example.com",
+      "login": { "url": "https://dev.example.com", "tokenFrom": "", "tokenKey": "" },
+      "bearerToken": ""
+    },
+    "qa": {
+      "baseUrl": "https://qa-api.example.com",
+      "login": { "url": "https://qa.example.com", "tokenFrom": "", "tokenKey": "" },
+      "bearerToken": ""
+    }
+  },
+  "$loginHelp": "tokenFrom: localStorage | sessionStorage | header. tokenKey: the storage key (or a JSON key path like 'oidc.user:https://idp:client.access_token'). Leave both empty the first time: the api-test skill detects them and fills them in.",
+  "auth": {
+    "$comment": "OPTIONAL. Only for projects whose identity server allows password/client_credentials grants (used by get-token.ps1). Most SPA logins do not — leave empty and use the browser login.",
+    "tokenUrl": "",
+    "clientId": "",
+    "clientSecret": "",
+    "scope": "",
+    "users": {}
+  }
+}

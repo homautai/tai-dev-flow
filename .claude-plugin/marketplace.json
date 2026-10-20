@@ -1,0 +1,12 @@
+{
+  "name": "tai-dev-flow",
+  "owner": { "name": "Tai Ho" },
+  "plugins": [
+    {
+      "name": "tai-dev-flow",
+      "source": "./",
+      "description": "Ticket-to-FE-handoff workflow: Jira ticket → clarify → spec → implement → review → API test local/dev/qa → FE API doc → work log.",
+      "version": "0.1.0"
+    }
+  ]
+}

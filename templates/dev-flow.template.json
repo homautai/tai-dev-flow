@@ -1,0 +1,36 @@
+{
+  "$comment": "Project settings for tai-dev-flow. Safe to commit: NO secrets here. Secrets live in ~/.dev-flow/credentials.json and the git-ignored apiTest.configFile.",
+  "jira": {
+    "baseUrl": "https://your-site.atlassian.net"
+  },
+  "bitbucket": {
+    "workspace": "your-workspace"
+  },
+  "paths": {
+    "tickets": "docs/tickets",
+    "rules": ".claude/rules/rule.md",
+    "apiDocRules": "",
+    "commitRules": ""
+  },
+  "apiTest": {
+    "dir": "docs/API_test",
+    "configFile": "docs/API_test/config_swagger.json",
+    "environments": ["local", "dev", "qa"],
+    "logFiles": {
+      "local": "docs/API_test/API-Test-Log.md",
+      "dev": "docs/API_test/API-Test-Log_dev.md",
+      "qa": "docs/API_test/API-Test-Log_qa.md"
+    },
+    "apiDocFile": "docs/API_test/API-Comments.md",
+    "sharedEnvironmentsNeedConfirmation": ["dev", "qa"]
+  },
+  "language": {
+    "conversation": "vi",
+    "workNotes": "vi",
+    "apiDoc": "en"
+  },
+  "tests": {
+    "unitTestCommand": "",
+    "buildCommand": ""
+  }
+}
