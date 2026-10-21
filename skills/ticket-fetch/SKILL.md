@@ -12,7 +12,8 @@ argument-hint: "<JIRA-KEY>"
 
 Read `<plugin-root>/reference/workflow.md` first.
 
-1. Normalise the key to upper case. Resolve the ticket folder `<paths.tickets>/<KEY>/`.
+1. Normalise the key to upper case. The ticket folder is `<tickets dir>/<KEY>/` (workflow.md §2: inside the
+   workspace when `workspace` is set).
 2. If `state.json` already exists, report the current stage and ask: refetch (keeps the other files), or
    continue with `dev-flow`? On refetch, compare the new `ticket.md` with the previous one. If the
    description, AC or comments changed after the spec was approved, list the changes and flag the spec
@@ -21,7 +22,7 @@ Read `<plugin-root>/reference/workflow.md` first.
    - If a Jira MCP tool is connected, you may use it to get the issue (fields, description, comments,
      subtasks, links) and write `ticket.md` in the same layout the script produces.
    - Otherwise run from the project root:
-     `pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" <KEY> -OutDir "<paths.tickets>/<KEY>"`
+     `pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" <KEY>` (it resolves the ticket folder itself)
    - On a credentials error, point the user to `setup-project` step 3. Do not ask for the token.
 4. Read `ticket.md`. If there is a parent, epic or "blocks / is blocked by" link that the ticket clearly
    depends on, list them and ask whether to fetch them too. Fetched linked tickets go into the cache, not

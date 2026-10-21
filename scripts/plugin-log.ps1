@@ -64,9 +64,7 @@ switch ($Action) {
         if (-not $Ticket) { throw "-Ticket is required." }
         $Ticket = $Ticket.ToUpper()
         if (-not $TicketsDir) {
-            $rel = Get-OptionalProperty (Get-OptionalProperty (Get-ProjectConfig -ProjectRoot $root) 'paths') 'tickets'
-            if (-not $rel) { $rel = 'docs/tickets' }
-            $TicketsDir = Join-Path $root $rel
+            $TicketsDir = Get-TicketsDir -ProjectRoot $root
         }
         $stateFile = Join-Path (Join-Path $TicketsDir $Ticket) 'state.json'
         $timingFile = Join-Path (Join-Path $TicketsDir $Ticket) 'timing.json'

@@ -17,7 +17,7 @@ ticket-fetch → ticket-clarify → ticket-spec ⏸ → implement → code-revie
 |---|---|---|
 | setup-project | `/tai-dev-flow:setup-project` | One-time project setup: `.dev-flow.json`, personal configs, `.gitignore`, rules check |
 | dev-flow | `/tai-dev-flow:dev-flow PROJ-123` | Shows where a ticket stands and continues from the next stage |
-| ticket-fetch | `/tai-dev-flow:ticket-fetch PROJ-123` | Jira ticket → `docs/tickets/PROJ-123/ticket.md` |
+| ticket-fetch | `/tai-dev-flow:ticket-fetch PROJ-123` | Jira ticket → `<workspace>/tickets/PROJ-123/ticket.md` |
 | ticket-clarify | `/tai-dev-flow:ticket-clarify PROJ-123` | Asks you questions one at a time → `questions.md` (D# decisions, OQ# open questions) |
 | ticket-spec | `/tai-dev-flow:ticket-spec PROJ-123` | `spec.md`: scope, AC, API contract, DB, plan, test cases (TC#) — needs your approval |
 | implement | `/tai-dev-flow:implement PROJ-123` | Codes the approved spec using the **project's** rules, tests first where possible |
@@ -51,7 +51,7 @@ The skills are plain `SKILL.md` files, so they can also be used by other agents 
 ## Automatic tracking
 
 The plugin ships Claude Code hooks (`hooks/hooks.json`) that time each ticket stage from the real clock and count
-your turns, writing `docs/tickets/KEY/timing.json`. Nothing to call by hand. Turn it off when you no longer need it:
+your turns, writing `<workspace>/tickets/KEY/timing.json`. Nothing to call by hand. Turn it off when you no longer need it:
 
 ```
 pwsh -File <plugin>/scripts/tracking.ps1 off            # all projects, for you
@@ -68,6 +68,18 @@ Or just ask Claude: "tắt tracking". Hooks need PowerShell 7 (`pwsh`).
 
 Coding rules are **not** in the plugin — they belong to each project (`paths.rules`).
 
+## Workspace (local-only, outside the repos)
+
+Tickets, specs, API test logs and caches can live outside the repos, in a workspace folder you choose during
+`setup-project` (nothing is assumed). A typical layout, with the workspace next to the repos:
+
+```
+<parent folder>/
+├── <workspace>/        tickets/<KEY>/ · API_test/<repo>/ · cache/<repo>/   (name/place chosen in setup-project)
+├── repo-a/  (.dev-flow.json: "workspace": "../<workspace>")
+└── repo-b/  (same workspace → one ticket folder even when a ticket spans repos)
+```
+
 ## Configuration — what goes where
 
 | File | Contains | Commit? |
@@ -75,7 +87,7 @@ Coding rules are **not** in the plugin — they belong to each project (`paths.r
 | `<project>/.dev-flow.json` | Jira URL, Bitbucket workspace, folders, log file names, languages | ✅ yes |
 | `<project>/.claude/rules/rule.md` (+ files it lists) | the project's coding rules | ✅ yes |
 | `~/.dev-flow/credentials.json` | Atlassian email + Jira/Bitbucket API tokens | ❌ never |
-| `<project>/docs/API_test/config_swagger.json` | base URLs per env, bearer tokens, OAuth client, test users | ❌ never |
+| `<workspace>/API_test/<repo>/config_swagger.json` | base URLs per env, bearer tokens, OAuth client, test users | ❌ never |
 | `~/.dev-flow/timekeeper.json` | Timekeeper/SRM URLs, your user id, codes, ticket sources (no tokens) | ❌ personal |
 
 Templates for all of them are in `templates/`. Run `/tai-dev-flow:setup-project` in each project and it will create them with you.

@@ -56,9 +56,8 @@ try {
     $sess | ConvertTo-Json | Set-Content $sessFile -Encoding utf8
 
     # --- stage transitions (checked at the end of every turn and before every prompt) ----------
-    $rel = Get-OptionalProperty (Get-OptionalProperty (Get-ProjectConfig -ProjectRoot $root) 'paths') 'tickets'
-    if (-not $rel) { $rel = 'docs/tickets' }
-    $ticketsDir = Join-Path $root $rel
+    if (-not (Get-ProjectConfig -ProjectRoot $root)) { exit 0 }   # project not set up: nothing to track
+    $ticketsDir = Get-TicketsDir -ProjectRoot $root
     if (-not (Test-Path $ticketsDir)) { exit 0 }
 
     foreach ($stateFile in Get-ChildItem -Path $ticketsDir -Filter 'state.json' -Recurse -Depth 1 -ErrorAction SilentlyContinue) {
@@ -73,6 +72,14 @@ try {
         $stage = [string]$state.stage
         $key = Split-Path -Leaf $ticketDir
 
+        if (-not $timing -and $turnStartedAt -and $stateFile.LastWriteTime -lt $turnStartedAt.AddSeconds(-2)) {
+            # Ticket existed before tracking saw it (older work, or tracking just turned on): take a baseline, record nothing.
+            $baseline = [pscustomobject]@{ ticket = (Split-Path -Leaf $ticketDir); lastStage = [string]$state.stage; lastAt = $now.ToString('o')
+                                           activeAtLast = [double]$sess.activeSeconds; promptsAtLast = [int]$sess.prompts
+                                           sessionAtLast = $sessionId; entries = @(); checkedAt = $now.ToString('o'); baselineOnly = $true }
+            $baseline | ConvertTo-Json -Depth 10 | Set-Content $timingFile -Encoding utf8
+            continue
+        }
         if (-not $timing) {
             # First sight of this ticket: the stage that just finished started with this turn.
             $start = if ($turnStartedAt) { $turnStartedAt } else { $stateFile.CreationTime }

@@ -30,11 +30,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Off
 
 if (-not $ConfigFile) {
-    $root = Find-ProjectRoot
-    $pc = Get-ProjectConfig -ProjectRoot $root
-    $rel = Get-OptionalProperty (Get-OptionalProperty $pc 'apiTest') 'configFile'
-    if (-not $rel) { $rel = 'docs/API_test/config_swagger.json' }
-    $ConfigFile = Join-Path $root $rel
+    $ConfigFile = Get-ApiConfigPath
 }
 
 $config = Read-ApiConfig $ConfigFile

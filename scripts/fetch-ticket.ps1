@@ -2,7 +2,7 @@
 .SYNOPSIS
     Fetch a Jira ticket and save it as Markdown.
 .EXAMPLE
-    pwsh -File fetch-ticket.ps1 -TicketId PROJ-123 -OutDir docs/tickets/PROJ-123
+    pwsh -File fetch-ticket.ps1 PROJ-123        # writes <tickets dir>/PROJ-123/ticket.md
 .NOTES
     Credentials: see lib/Common.ps1 (env vars, ~/.dev-flow/credentials.json, or legacy .jira/config.json).
     Jira URL:    jira.baseUrl in the project's .dev-flow.json, or -JiraBaseUrl.
@@ -11,7 +11,7 @@ param (
     [Parameter(Mandatory=$true, Position=0)]
     [string]$TicketId,
 
-    # Folder that receives ticket.md (usually <tickets dir>/<KEY>). Defaults to the cache folder.
+    # Folder that receives ticket.md. Default: <tickets dir>/<KEY> from .dev-flow.json (workspace aware).
     [string]$OutDir,
 
     [string]$JiraBaseUrl,
@@ -142,7 +142,7 @@ $commentsMd
 "@
 
 # Save formatted Markdown
-if (-not $OutDir) { $OutDir = $CacheDir }
+if (-not $OutDir) { $OutDir = Join-Path (Get-TicketsDir -ProjectRoot $ProjectRoot) $TicketId }
 if (-not (Test-Path $OutDir)) { New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
 $MdFile = Join-Path $OutDir "ticket.md"
 if ($OutDir -eq $CacheDir) { $MdFile = Join-Path $OutDir "$TicketId.md" }

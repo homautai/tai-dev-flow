@@ -1,5 +1,7 @@
 {
   "$comment": "Project settings for tai-dev-flow. Safe to commit: NO secrets here. Secrets live in ~/.dev-flow/credentials.json and the git-ignored apiTest.configFile.",
+  "workspace": "",
+  "$workspaceHelp": "Set by setup-project after asking the user. Local-only folder for tickets, API test files and cache, e.g. \"../.dev-flow\" (next to the repos, shared by sibling repos) or an absolute path. Empty = inside this repo (docs/...).",
   "jira": {
     "baseUrl": "https://your-site.atlassian.net"
   },
@@ -7,25 +9,25 @@
     "workspace": "your-workspace"
   },
   "paths": {
-    "tickets": "docs/tickets",
+    "tickets": "tickets",
     "rules": ".claude/rules/rule.md",
     "apiDocRules": "",
     "commitRules": ""
   },
   "apiTest": {
-    "dir": "docs/API_test",
-    "configFile": "docs/API_test/config_swagger.json",
+    "dir": "API_test/your-repo",
+    "configFile": "API_test/your-repo/config_swagger.json",
     "environments": [
       "local",
       "dev",
       "qa"
     ],
     "logFiles": {
-      "local": "docs/API_test/API-Test-Log.md",
-      "dev": "docs/API_test/API-Test-Log_dev.md",
-      "qa": "docs/API_test/API-Test-Log_qa.md"
+      "local": "API_test/your-repo/API-Test-Log.md",
+      "dev": "API_test/your-repo/API-Test-Log_dev.md",
+      "qa": "API_test/your-repo/API-Test-Log_qa.md"
     },
-    "apiDocFile": "docs/API_test/API-Comments.md",
+    "apiDocFile": "API_test/your-repo/API-Comments.md",
     "sharedEnvironmentsNeedConfirmation": [
       "dev",
       "qa"

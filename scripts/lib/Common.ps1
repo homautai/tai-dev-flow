@@ -117,9 +117,54 @@ function Get-JiraBaseUrl {
     throw "Jira base URL not configured. Set jira.baseUrl in .dev-flow.json (run /setup-project) or pass -JiraBaseUrl."
 }
 
+function Get-WorkspaceRoot {
+    # Folder that holds local-only work (tickets, API test logs, cache). Set "workspace" in .dev-flow.json,
+    # e.g. "../.dev-flow" = a folder next to the repo, shared by all repos in the same parent. Default: the repo.
+    param([string]$ProjectRoot = (Find-ProjectRoot), $ProjectConfig = $null)
+    if (-not $ProjectConfig) { $ProjectConfig = Get-ProjectConfig -ProjectRoot $ProjectRoot }
+    $ws = Get-OptionalProperty $ProjectConfig 'workspace'
+    if ($ws) { return [System.IO.Path]::GetFullPath((Join-Path $ProjectRoot $ws)) }
+    return $ProjectRoot
+}
+
+function Resolve-FlowPath {
+    # Resolves a path from .dev-flow.json: absolute stays as is, relative is taken from the workspace root.
+    param([string]$ProjectRoot = (Find-ProjectRoot), [Parameter(Mandatory=$true)][string]$Relative, $ProjectConfig = $null)
+    if ([System.IO.Path]::IsPathRooted($Relative)) { return $Relative }
+    return [System.IO.Path]::GetFullPath((Join-Path (Get-WorkspaceRoot -ProjectRoot $ProjectRoot -ProjectConfig $ProjectConfig) $Relative))
+}
+
+function Assert-ProjectConfig {
+    param([string]$ProjectRoot, $ProjectConfig)
+    if (-not $ProjectConfig) { throw "No .dev-flow.json in $ProjectRoot. Run /tai-dev-flow:setup-project first (it asks where tickets and API test files go)." }
+}
+
+function Get-TicketsDir {
+    param([string]$ProjectRoot = (Find-ProjectRoot))
+    $pc = Get-ProjectConfig -ProjectRoot $ProjectRoot
+    Assert-ProjectConfig -ProjectRoot $ProjectRoot -ProjectConfig $pc
+    $rel = Get-OptionalProperty (Get-OptionalProperty $pc 'paths') 'tickets'
+    if (-not $rel) { $rel = if (Get-OptionalProperty $pc 'workspace') { 'tickets' } else { 'docs/tickets' } }
+    return Resolve-FlowPath -ProjectRoot $ProjectRoot -Relative $rel -ProjectConfig $pc
+}
+
+function Get-ApiConfigPath {
+    param([string]$ProjectRoot = (Find-ProjectRoot))
+    $pc = Get-ProjectConfig -ProjectRoot $ProjectRoot
+    Assert-ProjectConfig -ProjectRoot $ProjectRoot -ProjectConfig $pc
+    $rel = Get-OptionalProperty (Get-OptionalProperty $pc 'apiTest') 'configFile'
+    if (-not $rel) { $rel = if (Get-OptionalProperty $pc 'workspace') { "API_test/$(Split-Path -Leaf $ProjectRoot)/config_swagger.json" } else { 'docs/API_test/config_swagger.json' } }
+    return Resolve-FlowPath -ProjectRoot $ProjectRoot -Relative $rel -ProjectConfig $pc
+}
+
 function Get-CacheDir {
     param([string]$ProjectRoot = (Find-ProjectRoot), [string]$Override)
-    $dir = if ($Override) { $Override } else { Join-Path $ProjectRoot '.dev-flow/cache' }
+    $dir = $Override
+    if (-not $dir) {
+        $pc = Get-ProjectConfig -ProjectRoot $ProjectRoot
+        Assert-ProjectConfig -ProjectRoot $ProjectRoot -ProjectConfig $pc
+        $dir = if (Get-OptionalProperty $pc 'workspace') { Join-Path (Get-WorkspaceRoot -ProjectRoot $ProjectRoot -ProjectConfig $pc) ("cache/" + (Split-Path -Leaf $ProjectRoot)) } else { Join-Path $ProjectRoot '.dev-flow/cache' }
+    }
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
     return $dir
 }

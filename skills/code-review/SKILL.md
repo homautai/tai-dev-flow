@@ -15,7 +15,7 @@ Read `<plugin-root>/reference/workflow.md` first.
 ## What to review
 - **No arguments:** the current branch vs its base (`git merge-base` with `develop`/`main`), plus uncommitted changes.
 - **`<repo> <pr-id>`:** run `pwsh -NoProfile -File "<plugin-root>/scripts/fetch-pr.ps1" <repo> <pr-id>`,
-  then read the saved `.diff` and comments from `.dev-flow/cache/`. For a GitHub repo, use
+  then read the saved `.diff` and comments from the cache dir (`<workspace>/cache/<repo>/`). For a GitHub repo, use
   `gh pr diff <id>` and `gh pr view <id> --comments` instead. Do not repeat issues that existing
   comments already raised and that are resolved.
 

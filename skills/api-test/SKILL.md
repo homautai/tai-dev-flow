@@ -18,7 +18,7 @@ Read `<plugin-root>/reference/workflow.md` first, especially §5 Secrets, §7 Lo
   environment, or the TC ids given. Without a spec, agree on a short list of cases with the user first.
 - Config: `apiTest.configFile`. Inspect it only with `pwsh -NoProfile -File "<plugin-root>/scripts/show-config.ps1" <file>`.
 - Swagger: if the config has `swaggerPath`, download it with
-  `call-api.ps1 -Target <env> -Path <swaggerPath> -NoAuth -OutFile .dev-flow/cache/swagger-<env>.json`
+  `call-api.ps1 -Target <env> -Path <swaggerPath> -NoAuth -OutFile <cache dir>/swagger-<env>.json`
   (drop `-NoAuth` if it needs a token). Use it to confirm routes and schemas before building request bodies.
 - Extra headers (tenant, culture…): `-Header "X-Tenant: ACME"`, repeatable.
 
@@ -47,7 +47,7 @@ Each project logs in differently. The how-to is per environment in the config (`
 ```
 pwsh -NoProfile -File "<plugin-root>/scripts/call-api.ps1" -Target <env> -Method POST -Path /x -BodyFile <tmp.json> -Expect 201
 ```
-- Write request bodies to a temp file under `.dev-flow/cache/` instead of inline quoting.
+- Write request bodies to a temp file in the cache dir (`<workspace>/cache/<repo>/`) instead of inline quoting.
 - Exit codes: 0 pass, 1 unexpected status, 2 network error, 3 no token, 4 token expired (log in again).
 - Check the body, not only the status: compare the key fields against the TC's expected result.
 - Chain cases where needed. For example, create, then GET the created id, then verify the fields.

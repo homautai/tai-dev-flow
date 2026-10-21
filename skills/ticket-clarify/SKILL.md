@@ -28,6 +28,11 @@ Questions come first; code reading is only there to make the questions sharper.
 Write what you found under "Answered by reading the code", citing `file:line`. Deeper work goes to the
 investigation step of `ticket-spec` and runs only with the user's OK.
 
+## Small tickets first
+Before the first real question, judge the size from `ticket.md`. If it looks small (one script, one bug in one
+place, no API/contract change), offer **small change mode** first (dev-flow §10): a 5-line spec and straight to
+implement. Ask it as the first question, with your recommendation; continue clarifying only if the user wants.
+
 ## How to ask
 - **One question at a time.** Each question includes:
   - why it matters (what changes in the code depending on the answer)

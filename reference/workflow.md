@@ -16,25 +16,46 @@ ticket-fetch → ticket-clarify → ticket-spec ⏸ → implement → code-revie
 
 ## 2. Where things live
 
+Local-only work (tickets, API test config and logs, cache) lives in a **workspace folder**, set by `"workspace"` in
+`.dev-flow.json`. Its location is **chosen by the user in `setup-project`**; there is no hard-coded default. A typical
+choice is a folder **next to the repos**, shared by every repo in the same parent, so one ticket that touches several
+repos (e.g. backend + database) has one folder.
+
+**Example only** — folder name and location are whatever the user chose in `setup-project`; never assume them:
+```
+<parent folder>/
+├── <workspace folder>/          ← e.g. ".dev-flow", chosen by the user (never a git repo)
+│   ├── tickets/<KEY>/           ticket.md, questions.md, spec.md, state.json, timing.json …
+│   ├── API_test/<repo>/         config_swagger.json (secrets), API-Test-Log*.md, API-Comments.md
+│   └── cache/<repo>/            raw Jira / PR / API responses
+├── repo-a/  .dev-flow.json  →  "workspace": "../<workspace folder>"
+└── repo-b/  .dev-flow.json  →  "workspace": "../<workspace folder>"
+```
+
 | What | Where | Committed? |
 |---|---|---|
 | Process (skills, scripts, templates) | this plugin | plugin repo |
-| Project settings (no secrets) | `<project>/.dev-flow.json` | yes |
-| Coding rules | `paths.rules` (default `.claude/rules/rule.md` + every file it lists) | yes |
-| Optional project overrides | `paths.apiDocRules`, `paths.commitRules` (win over the plugin's defaults) | yes |
-| Ticket workspace | `<paths.tickets>/<KEY>/` (default `docs/tickets/<KEY>/`) | project decides |
-| API test logs, API doc for FE | `apiTest.logFiles.*`, `apiTest.apiDocFile` | project decides |
-| Raw API/Jira responses | `<project>/.dev-flow/cache/` | **never** (git-ignored) |
+| Project settings (no secrets) | `<repo>/.dev-flow.json` | personal by default (`.git/info/exclude`); commit only if the team adopts the plugin |
+| Coding rules | `paths.rules` (relative to the **repo**) | as the project decides |
+| Optional rule overrides | `paths.apiDocRules`, `paths.commitRules` (relative to the repo) | as the project decides |
+| Ticket workspace | `<workspace>/<paths.tickets>/<KEY>/` (default `tickets/<KEY>/`) | **never** (outside the repo) |
+| API test config, logs, FE API doc | `<workspace>/<apiTest.*>` (default `API_test/<repo>/…`) | **never** |
+| Raw API/Jira responses | `<workspace>/cache/<repo>/` | **never** |
 | Atlassian credentials | `~/.dev-flow/credentials.json` or env vars | **never** |
-| API test config + tokens | `apiTest.configFile` (default `docs/API_test/config_swagger.json`) | **never** (git-ignored) |
-| Timekeeper settings, plans, history | `~/.dev-flow/timekeeper.json`, `~/.dev-flow/timekeeper/` | personal, outside projects |
+| Timing, feedback log | `<ticket>/timing.json`, `~/.dev-flow/plugin-log.jsonl` | **never** |
 
-If `.dev-flow.json` is missing, use the defaults above and suggest running `setup-project`.
+**Path rule:** in `.dev-flow.json`, `paths.tickets` and every `apiTest.*` path are **relative to the workspace**;
+`paths.rules`, `apiDocRules`, `commitRules` are relative to the **repo**. Without `workspace`, everything is relative to
+the repo (older setup: `docs/tickets`, `docs/API_test`). Scripts resolve this themselves; when you read or write these
+files directly, resolve them the same way.
+
+If `.dev-flow.json` is missing, the scripts stop with "run setup-project": nothing is written anywhere until the user
+has chosen the locations.
 
 ## 3. Ticket workspace
 
 ```
-<tickets>/<KEY>/
+<tickets dir>/<KEY>/
 ├── state.json               progress, read by dev-flow
 ├── ticket.md                fetched ticket (ticket-fetch)
 ├── questions.md             decisions D# and open questions OQ# (ticket-clarify)
@@ -98,7 +119,7 @@ Scripts are PowerShell 7 (`pwsh`) in `<plugin-root>/scripts/`. Run them from the
 find `.dev-flow.json`:
 
 ```
-pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" PROJ-123 -OutDir docs/tickets/PROJ-123
+pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" PROJ-123
 ```
 
 If an Atlassian MCP server (Jira tools) is connected, it may be used instead of the Jira scripts.
@@ -120,7 +141,8 @@ If an Atlassian MCP server (Jira tools) is connected, it may be used instead of 
   It masks secrets at any depth. Never `cat` / `Get-Content` / `Read` such a file, and never write ad-hoc masking code.
 - Never ask the user to paste a secret into the chat. Tell them which file/field to fill instead.
 - Never write secrets into ticket files, test logs, API docs, commits or PR descriptions.
-- Before committing, make sure `.dev-flow/cache/` and `apiTest.configFile` are git-ignored.
+- Before committing, make sure nothing from the workspace, the cache or `apiTest.configFile` is inside the repo
+  (or, for older in-repo setups, that they are git-ignored).
 
 ## 6. Git
 

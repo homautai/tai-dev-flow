@@ -22,10 +22,7 @@ Set-StrictMode -Off
 
 $Ticket = $Ticket.Trim().ToUpper()
 if (-not $TicketsDir) {
-    $root = Find-ProjectRoot
-    $rel = Get-OptionalProperty (Get-OptionalProperty (Get-ProjectConfig -ProjectRoot $root) 'paths') 'tickets'
-    if (-not $rel) { $rel = 'docs/tickets' }
-    $TicketsDir = Join-Path $root $rel
+    $TicketsDir = Get-TicketsDir -ProjectRoot (Find-ProjectRoot)
 }
 $dir = Join-Path $TicketsDir $Ticket
 $file = Join-Path $dir 'state.json'

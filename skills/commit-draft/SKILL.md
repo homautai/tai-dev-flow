@@ -16,7 +16,7 @@ pushing are always the user's action. This skill stops after `git add` and the d
 ## Steps
 1. Run `git status` and `git diff`. Separate the ticket's changes from unrelated ones. Never stage:
    - secrets or personal config (`config_swagger.json`, `credentials.json`, `.jira/config.json`)
-   - caches (`.dev-flow/cache/`, `.jira/cache/`)
+   - caches and workspace files (`.dev-flow/`, `.jira/cache/`, ticket folders, API test logs)
    - local scratch files
 
    If such a file shows up as untracked, suggest a `.gitignore` entry.

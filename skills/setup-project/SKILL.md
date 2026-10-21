@@ -19,9 +19,19 @@ Use the git root of the current folder. Confirm it with the user if it is not ob
 - If it exists: show it and ask what to change.
 - Otherwise start from `<plugin-root>/templates/dev-flow.template.json` and fill it in:
   - Jira site URL and Bitbucket workspace. Infer them from `git remote -v`, existing scripts or docs when you can.
-  - Ticket folder: look for an existing docs folder (`docs/`, `docs/tickets/`) and follow it.
-  - API test folder and log file names: if the project already has `API-Test-Log*.md` or
-    `API-Comments.md`, point the config at those files. Never rename or move them.
+  - **Workspace: always ask, never assume.** Where should local-only work (tickets, API test files, cache) live?
+    Show the options with the real paths of this machine:
+    1. a folder **next to the repos**, shared by sibling repos, e.g. `<parent>/.dev-flow` (recommended when several
+       repos belong to one product);
+    2. a folder of the user's choice (any absolute path);
+    3. inside this repo (`docs/…`, older setup; must then be git-ignored).
+    If a sibling repo already has a `.dev-flow.json` with a workspace, propose reusing that same one.
+    Write the answer to `workspace` (relative to the repo, or absolute). Then `paths.tickets` = `tickets` and
+    `apiTest.*` = `API_test/<repo name>/...` (relative to the workspace, workflow.md §2). Create the folder only after
+    the user confirms.
+  - If the repo already has `docs/tickets/` or `docs/API_test/` from an older setup, offer to **move** them into the
+    workspace (`mv -n`, show the list first, never overwrite), then remove their ignore lines.
+  - API test log file names: keep the names the user already uses (`API-Test-Log*.md`, `API-Comments.md`).
   - Rules entry file: find `.claude/rules/rule.md`, `CLAUDE.md`, `AGENTS.md` or similar.
   - Build and unit-test commands: detect them from the solution or `package.json`, then confirm.
   - **Local testing (`testing`):** who starts the database and app (the user, or the agent with which commands),
@@ -63,10 +73,13 @@ Where to write the ignore lines:
 
 Ask which one, recommending `.git/info/exclude`. Make sure these lines exist there. Show the diff and get an OK before editing:
 ```
-.dev-flow/cache/
-<apiTest.configFile>
+.dev-flow.json
+.dev-flow/
 .jira/config.json
 .jira/cache/
+# only for an in-repo setup without workspace:
+# docs/tickets/
+# docs/API_test/
 ```
 If ticket docs / API test logs are local-only (step 2), add `paths.tickets` and the `apiTest` log, doc and config
 paths to the same file.
