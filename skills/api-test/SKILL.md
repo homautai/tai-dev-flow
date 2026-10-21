@@ -73,6 +73,10 @@ Conclusion. If the log file already exists, follow the labels it already uses.
 
 Never write tokens or Authorization headers. Anonymise personal data if it is real customer data.
 
+## User-verified cases
+If the user already tested some cases themselves, do not re-run them: record them as user-verified
+(workflow.md §7, "User-verified results") and run only the rest.
+
 ## Finish
 Report as `passed / failed / skipped per TC`. Update `state.json` with `tested.<env>` = `{at, passed, failed}`
 and the stage `tested-<env>` when everything passed. Next step:

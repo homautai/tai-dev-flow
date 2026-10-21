@@ -53,6 +53,7 @@ If `.dev-flow.json` is missing, use the defaults above and suggest running `setu
   "specApproved": false,
   "branch": "feature/PROJ-123-short-name",
   "tested": { "local": null, "dev": null, "qa": null },
+  "codeChangedAt": "2026-10-20T10:40:00+07:00",
   "history": [
     { "stage": "fetched", "startedAt": "2026-10-20T09:00:00+07:00", "finishedAt": "2026-10-20T09:01:10+07:00",
       "minutes": 1.2, "userTurns": 0, "notes": "" }
@@ -61,7 +62,10 @@ If `.dev-flow.json` is missing, use the defaults above and suggest running `setu
 ```
 
 Stages, in order: `fetched`, `clarified`, `specified`, `implemented`, `reviewed`, `tested-local`,
-`tested-dev`, `tested-qa`, `documented`, `logged`. (`commit-draft` does not change the stage.) `tested.<env>` holds `{ "at": "...", "passed": 7, "failed": 0 }`.
+`tested-dev`, `tested-qa`, `documented`, `logged`. (`commit-draft` does not change the stage.)
+`tested.<env>` holds `{ "at": "...", "by": "agent" | "user", "passed": 7, "failed": 0, "cases": ["TC1", "..."], "notes": "" }`.
+`codeChangedAt` is updated by every skill that changes the ticket's code; a `tested.<env>` older than it is **stale**
+and that environment needs a retest.
 Every skill that finishes its stage appends to `history` and updates `stage`.
 
 ### Timing (every skill, every run)
@@ -119,6 +123,18 @@ Each project tests differently; `.dev-flow.json` → `testing` says how.
   If a test needs a database that is not there, mark the case NOT RUN and tell the user what is needed.
 - Never run scripts against any database without the user's OK.
 - Report each test case honestly as PASS / FAIL / PARTIAL (what was not covered) / NOT RUN (why).
+
+### User-verified results
+When the user says they tested something themselves ("tôi đã test xong", "verified", "all good"):
+1. Ask, in one message, only for what is missing: environment, which test cases (or "all"), result per case if not
+   all PASS, and whether it was on the **current** code (after the last change, `codeChangedAt`). Accept short answers.
+2. Do not re-run those cases and do not mark more than the user confirmed.
+3. Record it:
+   - In the environment's API test log (or `review.md` / `implementation-notes.md` when there is no API log), an entry
+     headed `Verified by <user name> (manual)` with date/time, environment, cases, results and the user's notes.
+   - In `state.json`: `tested.<env> = { at, by: "user", passed, failed, cases, notes }`, and advance the stage
+     (and close the related review finding) exactly as if you had run the tests.
+4. If the user tested an older version of the code, record it but keep the environment marked stale and say so.
 
 ## 8. Shared environments
 

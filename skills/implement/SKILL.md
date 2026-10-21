@@ -28,7 +28,9 @@ Read `<plugin-root>/reference/workflow.md` first.
 Follow `testing` in `.dev-flow.json` and workflow.md §7. If the local environment is run by the user, list the
 prerequisites and wait for "ready" before running tests that need it. **Never create, restore, attach or drop
 any database, temporary or not**: if one is missing, mark the affected cases NOT RUN and say what is needed.
-Never run scripts against a database without the user's OK. Mark test cases you could not run properly as
+Never run scripts against a database without the user's OK.
+When the user tests some cases themselves, record them as user-verified (workflow.md §7, "User-verified results").
+Every time you change the ticket's code, set `state.json.codeChangedAt` to the current time. Mark test cases you could not run properly as
 PARTIAL or NOT RUN, with what is missing.
 
 ## Database

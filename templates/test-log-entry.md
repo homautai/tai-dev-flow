@@ -12,3 +12,10 @@
   ```
 - **{{Notes}}:** {{retries, data used, ids created}}
 - **{{Conclusion}}:** {{what this proves / root cause if failed}}
+
+<!-- Variant when the user tested it themselves: -->
+### Verified by {{user name}} (manual) — {{YYYY-MM-DD HH:mm}}
+
+- **Environment:** {{local / dev / qa}} · **Code version:** {{branch @ commit, or "current working tree"}}
+- **Cases:** {{TC7, TC8, TC12 …}} → {{all PASS / per-case results}}
+- **{{Notes}}:** {{what the user reported}}

@@ -35,8 +35,10 @@ Read `<plugin-root>/reference/workflow.md` first.
    Tell the user exactly what you are waiting for.
 6. Commit status is not stored in `state.json`. Check `git log --oneline --grep <KEY>` and `git status`:
    if the ticket's changes are committed and the tree is clean, treat `commit` as done.
-7. When the ticket's code changes after `tested-*` (a fix or new requirement), mark the affected
+7. Mark test stages done by `tested.<env>.by`: `✅` for agent-run, `✅👤` for user-verified, `⚠️ stale` when older than
+   `codeChangedAt`. When the user says they tested something, follow "User-verified results" in workflow.md §7.
+8. When the ticket's code changes after `tested-*` (a fix or new requirement), mark the affected
    environments as needing a retest and say so.
-8. The user can jump to a stage (e.g. "test dev now"). Allow it, but point out any skipped prerequisite.
-9. **Small change mode:** for a small bug fix, the user may say to skip clarify/spec. Then write a 5-line
+9. The user can jump to a stage (e.g. "test dev now"). Allow it, but point out any skipped prerequisite.
+10. **Small change mode:** for a small bug fix, the user may say to skip clarify/spec. Then write a 5-line
    `spec.md` (problem, fix, test cases), mark it `APPROVED (small change)` with their OK, and continue from `implement`.
