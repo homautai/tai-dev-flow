@@ -1,6 +1,6 @@
 ---
 name: timekeeper-log
-description: Log a whole month (or date range) of work to Timekeeper — find the Jira tickets the user was assigned or logged work on in that period (Jira MCP/Rovo or REST), add leave and public holidays from SRM, split each working day evenly across active tickets to exactly 8h, show the plan, then post the entries through the user's logged-in browser session. Run explicitly with /tai-dev-flow:timekeeper-log <yyyy-MM>.
+description: Log a whole month (or date range) of work to Timekeeper — find the Jira tickets the user was assigned or logged work on in that period (Jira MCP/Rovo or REST), add leave and public holidays from SRM, split each working day evenly across active tickets to exactly 8h, show the plan, then post the entries through the user's logged-in browser session. Run explicitly with /tai-dev-flow:timekeeper-log yyyy-MM.
 argument-hint: "<yyyy-MM> | <yyyy-MM-dd> <yyyy-MM-dd>"
 disable-model-invocation: true
 ---

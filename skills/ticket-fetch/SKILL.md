@@ -1,6 +1,6 @@
 ---
 name: ticket-fetch
-description: Fetch a Jira ticket into the ticket workspace (<tickets>/<KEY>/ticket.md) and start its state file. Use when the user gives a Jira key (e.g. WEC-123) and wants to start, read or pick up that ticket, or when dev-flow starts a new ticket.
+description: Fetch a Jira ticket into the ticket workspace (tickets/KEY/ticket.md) and start its state file. Use when the user gives a Jira key (e.g. WEC-123) and wants to start, read or pick up that ticket, or when dev-flow starts a new ticket.
 argument-hint: "<JIRA-KEY>"
 ---
 

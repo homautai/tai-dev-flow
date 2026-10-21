@@ -1,6 +1,6 @@
 ---
 name: ticket-spec
-description: Turn a fetched and clarified ticket into an implementation spec (<tickets>/<KEY>/spec.md) with scope, acceptance criteria, API contract, DB changes, implementation plan and numbered test cases, then wait for the user's approval. Use after ticket-clarify or when the user asks to write the spec / viết spec / viết ticket thành md.
+description: Turn a fetched and clarified ticket into an implementation spec (tickets/KEY/spec.md) with scope, acceptance criteria, API contract, DB changes, implementation plan and numbered test cases, then wait for the user's approval. Use after ticket-clarify or when the user asks to write the spec / viết spec / viết ticket thành md.
 argument-hint: "<JIRA-KEY>"
 ---
 

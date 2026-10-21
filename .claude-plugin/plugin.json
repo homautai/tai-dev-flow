@@ -1,8 +1,18 @@
 {
   "name": "tai-dev-flow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ticket-to-FE-handoff workflow for backend developers: fetch Jira ticket, clarify, spec, implement with project rules, code review, API test on local/dev/qa with logs, FE API docs, work log.",
-  "author": { "name": "Tai Ho" },
+  "author": {
+    "name": "Tai Ho"
+  },
   "repository": "https://github.com/homautai/tai-dev-flow",
-  "keywords": ["jira", "bitbucket", "workflow", "spec", "api-testing", "code-review", "dotnet"]
+  "keywords": [
+    "jira",
+    "bitbucket",
+    "workflow",
+    "spec",
+    "api-testing",
+    "code-review",
+    "dotnet"
+  ]
 }

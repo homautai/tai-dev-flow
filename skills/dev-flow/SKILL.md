@@ -1,6 +1,6 @@
 ---
 name: dev-flow
-description: Run or resume the full ticket workflow (fetch → clarify → spec → implement → review → API test local/dev/qa → FE API doc → work log) for a Jira key, continuing from the stage recorded in the ticket's state.json and stopping at each approval gate. Run explicitly with /tai-dev-flow:dev-flow <KEY>.
+description: Run or resume the full ticket workflow (fetch → clarify → spec → implement → review → API test local/dev/qa → FE API doc → work log) for a Jira key, continuing from the stage recorded in the ticket's state.json and stopping at each approval gate. Run explicitly with /tai-dev-flow:dev-flow KEY.
 argument-hint: "<JIRA-KEY>"
 disable-model-invocation: true
 ---
