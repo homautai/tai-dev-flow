@@ -68,14 +68,16 @@ Stages, in order: `fetched`, `clarified`, `specified`, `implemented`, `reviewed`
 and that environment needs a retest.
 Every skill that finishes its stage appends to `history` and updates `stage`.
 
-### Timing (every skill, every run)
-- **At the start** of a skill run, read the current local time with a shell command (`date -Iseconds`, or
-  `Get-Date -Format o` in PowerShell) and keep it. Never guess the time.
-- **At the end** (stage finished, or the user stops), read the time again and append one `history` entry:
-  `startedAt`, `finishedAt`, `minutes` (wall clock, 1 decimal), `userTurns` (how many times the user had to
-  answer or correct you during this run), and short `notes` (e.g. "stopped by user", "waited for deploy").
-- A stage run more than once gets one entry per run. `dev-flow` sums them.
-- Wall-clock time includes time spent waiting for the user. That is intended: it is what the ticket cost.
+### Timing (every stage skill, every run) — use the timer script, never write times by hand
+- **First action** of a stage skill: `pwsh -NoProfile -File "<plugin-root>/scripts/stage-timer.ps1" start -Ticket <KEY> -Stage <stage>`
+- **Last action** (stage finished, or the user stops):
+  `pwsh -NoProfile -File "<plugin-root>/scripts/stage-timer.ps1" finish -Ticket <KEY> -UserTurns <n> -Notes "<short>"`
+  where `<n>` = how many times the user had to answer or correct you during this run.
+- The script reads the real clock and writes `history` (with `source: "timer"`). **Never type a timestamp, never
+  estimate one, never edit `history` times yourself.** If you forgot to start the timer, say so; do not invent a time.
+- `stage-timer.ps1 show -Ticket <KEY>` prints the per-stage table and total. Rows not written by the timer are shown
+  as not measured.
+- Wall-clock time includes waiting for the user. That is intended: it is what the ticket cost.
 
 ## 4. Running the scripts
 

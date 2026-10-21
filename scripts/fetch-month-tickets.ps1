@@ -87,5 +87,5 @@ $dir = Split-Path -Parent $OutFile
 if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
 [pscustomobject]@{ period = @{ start = $Start; end = $End }; sources = $report; tickets = $all } |
     ConvertTo-Json -Depth 6 | Set-Content -Path $OutFile -Encoding utf8
-$report | Format-Table -AutoSize | Out-String | Write-Host
+foreach ($r in $report) { Write-Host ("{0}: {1}, {2} tickets ({3}..{4})" -f $r.source, $r.status, $r.count, $r.start, $r.end) }
 Write-Host "Tickets: $($all.Count) -> $OutFile"

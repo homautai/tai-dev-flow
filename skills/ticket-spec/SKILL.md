@@ -6,6 +6,10 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket spec
 
+> **Timer:** first run `stage-timer.ps1 start -Ticket <KEY> -Stage specified`, and as the very last step
+> `stage-timer.ps1 finish -Ticket <KEY> -UserTurns <n>` (workflow.md §3, Timing). Never write times by hand.
+
+
 Read `<plugin-root>/reference/workflow.md` first. Inputs: `ticket.md`, `questions.md`, the rules index, and the code explored during clarification.
 
 0. **Investigation (bugs, performance, unclear root cause).** If the fix depends on facts nobody knows

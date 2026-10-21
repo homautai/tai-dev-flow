@@ -6,6 +6,10 @@ argument-hint: "<JIRA-KEY>"
 
 # API doc for FE
 
+> **Timer:** first run `stage-timer.ps1 start -Ticket <KEY> -Stage documented`, and as the very last step
+> `stage-timer.ps1 finish -Ticket <KEY> -UserTurns <n>` (workflow.md §3, Timing). Never write times by hand.
+
+
 Read first:
 - `<plugin-root>/reference/workflow.md`
 - **`references/api-documentation.md`**. These are the rules (§1–§6). This file only describes the steps.

@@ -94,6 +94,7 @@ Tokens are never printed, logged or sent to the chat.
 | `scripts/fetch-pr.ps1 <repo> <prId> [workspace]` | Bitbucket PR metadata, diff, comments |
 | `scripts/logwork-jira.ps1 <KEY> <time> [comment] [started]` | Jira worklog |
 | `scripts/call-api.ps1 -Target dev -Method GET -Path /x -Expect 200` | API call with token from config, token masked |
+| `scripts/stage-timer.ps1 start/finish/show -Ticket KEY` | Real start/finish time per stage in state.json, and the timing table |
 | `scripts/show-config.ps1 <file>` | Print a personal config with every secret masked |
 | `scripts/save-token.ps1 -Target dev -Token <v>` | Save a token captured from the browser login into the config (prints expiry only) |
 | `scripts/get-token.ps1 -Target dev` | Optional: OAuth2 password/client_credentials token → config (not printed) |

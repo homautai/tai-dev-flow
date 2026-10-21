@@ -6,6 +6,10 @@ argument-hint: "<local|dev|qa> [<JIRA-KEY>] [TC ids]"
 
 # API test
 
+> **Timer:** first run `stage-timer.ps1 start -Ticket <KEY> -Stage tested-<env>`, and as the very last step
+> `stage-timer.ps1 finish -Ticket <KEY> -UserTurns <n>` (workflow.md §3, Timing). Never write times by hand.
+
+
 Read `<plugin-root>/reference/workflow.md` first, especially §5 Secrets, §7 Local testing and §8 Shared environments.
 
 ## Inputs

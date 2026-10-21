@@ -6,6 +6,10 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket clarify (grill)
 
+> **Timer:** first run `stage-timer.ps1 start -Ticket <KEY> -Stage clarified`, and as the very last step
+> `stage-timer.ps1 finish -Ticket <KEY> -UserTurns <n>` (workflow.md §3, Timing). Never write times by hand.
+
+
 Read `<plugin-root>/reference/workflow.md` first. Inputs: `<tickets>/<KEY>/ticket.md` and any existing `questions.md`.
 
 ## Before asking anything: a budget of 6 tool calls, then ask

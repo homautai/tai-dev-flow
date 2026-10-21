@@ -6,6 +6,10 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket fetch
 
+> **Timer:** first run `stage-timer.ps1 start -Ticket <KEY> -Stage fetched`, and as the very last step
+> `stage-timer.ps1 finish -Ticket <KEY> -UserTurns <n>` (workflow.md §3, Timing). Never write times by hand.
+
+
 Read `<plugin-root>/reference/workflow.md` first.
 
 1. Normalise the key to upper case. Resolve the ticket folder `<paths.tickets>/<KEY>/`.
