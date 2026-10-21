@@ -53,13 +53,25 @@ If `.dev-flow.json` is missing, use the defaults above and suggest running `setu
   "specApproved": false,
   "branch": "feature/WEC-123-short-name",
   "tested": { "local": null, "dev": null, "qa": null },
-  "history": [ { "stage": "fetched", "at": "2026-10-20T09:00:00+07:00" } ]
+  "history": [
+    { "stage": "fetched", "startedAt": "2026-10-20T09:00:00+07:00", "finishedAt": "2026-10-20T09:01:10+07:00",
+      "minutes": 1.2, "userTurns": 0, "notes": "" }
+  ]
 }
 ```
 
 Stages, in order: `fetched`, `clarified`, `specified`, `implemented`, `reviewed`, `tested-local`,
 `tested-dev`, `tested-qa`, `documented`, `logged`. (`commit-draft` does not change the stage.) `tested.<env>` holds `{ "at": "...", "passed": 7, "failed": 0 }`.
 Every skill that finishes its stage appends to `history` and updates `stage`.
+
+### Timing (every skill, every run)
+- **At the start** of a skill run, read the current local time with a shell command (`date -Iseconds`, or
+  `Get-Date -Format o` in PowerShell) and keep it. Never guess the time.
+- **At the end** (stage finished, or the user stops), read the time again and append one `history` entry:
+  `startedAt`, `finishedAt`, `minutes` (wall clock, 1 decimal), `userTurns` (how many times the user had to
+  answer or correct you during this run), and short `notes` (e.g. "stopped by user", "waited for deploy").
+- A stage run more than once gets one entry per run. `dev-flow` sums them.
+- Wall-clock time includes time spent waiting for the user. That is intended: it is what the ticket cost.
 
 ## 4. Running the scripts
 
@@ -71,6 +83,16 @@ pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" WEC-123 -OutDir d
 ```
 
 If an Atlassian MCP server (Jira tools) is connected, it may be used instead of the Jira scripts.
+
+### Searching code fast
+- Search **only inside the current repo** (the folder with `.dev-flow.json`), never a parent folder that holds
+  several repos.
+- Prefer `git grep -n "<pattern>" -- <path>` (tracked files only, skips build output), or `rg` if installed.
+  Avoid `grep -r` / `find` over the whole tree.
+- Always exclude `bin/`, `obj/`, `node_modules/`, `dist/`, `.git/`, `packages/`, logs and caches.
+- Narrow first (one folder or one file pattern, e.g. `-- '*.cs'`), widen only if nothing is found.
+- In Cowork, every command crosses a bridge to the user's machine and is slow: batch several searches into
+  one command instead of many small ones.
 
 ## 5. Secrets — hard rules
 

@@ -17,6 +17,8 @@ Read `<plugin-root>/reference/workflow.md` first.
    ✅ fetched  ✅ clarified  ✅ spec (approved)  ▶ implement  ☐ review  ☐ test local  ☐ commit  ☐ test dev  ☐ test qa  ☐ api doc  ☐ log work
    Open questions: OQ2 (BA)    Last activity: 2026-10-20 14:05
    ```
+   When asked "how long" / "thời gian", or when the ticket reaches `logged`, also show a timing table from
+   `history`: stage, runs, minutes, user turns, plus the total. Use it as the default suggestion for `work-log`.
 4. Continue with the next stage. Read `<plugin-root>/skills/<stage>/SKILL.md` and follow it in full.
    Read the file directly. Some stages (`setup-project`, `work-log`) cannot be auto-invoked as skills.
    `ticket-fetch` → `ticket-clarify` → `ticket-spec` → `implement` (includes `code-review`) → `api-test local`

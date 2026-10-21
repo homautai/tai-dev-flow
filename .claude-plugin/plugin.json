@@ -1,6 +1,6 @@
 {
   "name": "tai-dev-flow",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Ticket-to-FE-handoff workflow for backend developers: fetch Jira ticket, clarify, spec, implement with project rules, code review, API test on local/dev/qa with logs, FE API docs, work log.",
   "author": {
     "name": "Tai Ho"

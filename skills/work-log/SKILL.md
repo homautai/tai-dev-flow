@@ -12,7 +12,8 @@ This logs time on **one Jira ticket**. For a whole month in Timekeeper, use `tim
 Read `<plugin-root>/reference/workflow.md` first (`<plugin-root>` = two folders above this file).
 
 1. Collect the details:
-   - **Time:** from the argument, or ask. If you suggest a figure based on `state.json.history`, label it a rough guess.
+   - **Time:** from the argument, or ask. You may suggest the sum of `minutes` in `state.json.history`, labelled
+     as measured wall-clock time (it includes waiting), rounded to the nearest 15 minutes.
    - **Started:** default now. Accept "today 9am"-style input and convert it to Jira's format
      `yyyy-MM-ddTHH:mm:ss.000+0700` (using the user's time zone).
    - **Comment:** default to a one-line summary of the stages done, e.g. "Clarify + spec + implement + API test local/dev".

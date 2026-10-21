@@ -8,17 +8,21 @@ argument-hint: "<JIRA-KEY>"
 
 Read `<plugin-root>/reference/workflow.md` first. Inputs: `<tickets>/<KEY>/ticket.md` and any existing `questions.md`.
 
-## Before asking anything: a quick scan, not an investigation
-Do a **short, time-boxed scan** so you do not ask what the code answers at a glance:
-- Locate the entry points only: the controller/endpoint, handler or service, entity/table, and any earlier
-  ticket folder in the same area. Use search (grep/glob). Read **at most ~10 files**, and only the relevant parts.
-- Aim for **a few minutes**. Then start asking, even if you are not done exploring.
-- **Do not** spawn sub-agents, trace call chains end to end, inspect infrastructure (timeouts, gRPC/HTTP
-  settings, query plans), or try to find a root cause. That is the investigation step of `ticket-spec`,
-  and it is done only with the user's OK.
+## Before asking anything: a budget of 6 tool calls, then ask
+Questions come first; code reading is only there to make the questions sharper.
 
-Write what you found under "Answered by reading the code", citing `file:line`. Anything that needs deeper
-digging becomes a question ("Should the spec include an investigation of X?") or an `OQ`.
+- **Hard budget: at most 6 tool calls** (searches + file reads) before the first question. Count them.
+  When the budget is used up, **stop and ask**, even mid-thought.
+- Spend them on the entry points only: the endpoint/controller, the main handler or service, the entity/table,
+  and any earlier ticket folder in the same area. Read only the relevant part of each file.
+- **Forbidden in this skill:** sub-agents; following callers or call chains; reading stored procedures,
+  SQL functions or infrastructure (timeouts, gRPC/HTTP settings, query plans); anything aimed at finding
+  a root cause. If you notice you are asking yourself "why does it fail" or "where is it called from",
+  that is investigation: turn it into a question for the user or an `OQ`, and move on.
+- **Between questions:** at most 2 targeted lookups to check a specific answer, never a new exploration.
+
+Write what you found under "Answered by reading the code", citing `file:line`. Deeper work goes to the
+investigation step of `ticket-spec` and runs only with the user's OK.
 
 ## How to ask
 - **One question at a time.** Each question includes:
