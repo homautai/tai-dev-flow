@@ -68,16 +68,29 @@ Stages, in order: `fetched`, `clarified`, `specified`, `implemented`, `reviewed`
 and that environment needs a retest.
 Every skill that finishes its stage appends to `history` and updates `stage`.
 
-### Timing (every stage skill, every run) — use the timer script, never write times by hand
-- **First action** of a stage skill: `pwsh -NoProfile -File "<plugin-root>/scripts/stage-timer.ps1" start -Ticket <KEY> -Stage <stage>`
-- **Last action** (stage finished, or the user stops):
-  `pwsh -NoProfile -File "<plugin-root>/scripts/stage-timer.ps1" finish -Ticket <KEY> -UserTurns <n> -Notes "<short>"`
-  where `<n>` = how many times the user had to answer or correct you during this run.
-- The script reads the real clock and writes `history` (with `source: "timer"`). **Never type a timestamp, never
-  estimate one, never edit `history` times yourself.** If you forgot to start the timer, say so; do not invent a time.
-- `stage-timer.ps1 show -Ticket <KEY>` prints the per-stage table and total. Rows not written by the timer are shown
-  as not measured.
-- Wall-clock time includes waiting for the user. That is intended: it is what the ticket cost.
+### Timing — automatic, nothing to do
+Timing is recorded by the plugin's hooks (`hooks/hooks.json` → `scripts/hooks/track.ps1`), not by you:
+- every user prompt and every end of turn is timestamped from the real clock;
+- when a ticket's `state.json` `stage` changes, an entry is appended to `<tickets>/<KEY>/timing.json`
+  (stage, start, finish, wall minutes, active minutes, user turns);
+- when the stage becomes `logged`, the ticket summary is written to the plugin log.
+So: **just keep `state.json.stage` up to date** at the end of each stage. Never write times yourself, never edit
+`timing.json`. To show the table run `pwsh -NoProfile -File "<plugin-root>/scripts/stage-timer.ps1" show -Ticket <KEY>`.
+Switches: `pwsh -NoProfile -File "<plugin-root>/scripts/tracking.ps1" status|on|off [-Feature timing|feedback] [-Project]`.
+
+### Plugin feedback log (for evaluating the plugin)
+Only when `tracking.feedbackLog` is on (`tracking.ps1 status`; the script itself ignores calls when it is off).
+Append one line with `pwsh -NoProfile -File "<plugin-root>/scripts/plugin-log.ps1" add -Ticket <KEY> -Skill <skill> -Type <type> -Note "<one line>"`
+**at the moment it happens**:
+- `correction`: the user had to correct, stop or redirect you ("dừng lại", "không phải vậy", "hỏi tôi luôn"…).
+- `rule-break`: you notice you broke a plugin rule (forgot the timer, went over the clarify budget, guessed a time,
+  ran something that needed consent…). Be honest; this is what improves the plugin.
+- `stuck`: you could not continue without the user doing something (missing DB, expired token, script error).
+- `good`: something worth keeping (a question that changed the design, a real bug found in review).
+Notes are one short line about the process. Never put code, customer data or secrets in them.
+The ticket summary is written automatically when the stage becomes `logged`. If the ticket ends without `work-log`
+(the user says it is done), run `plugin-log.ps1 ticket-summary -Ticket <KEY> -Skipped "<stages skipped and why>"` once.
+The log lives in `~/.dev-flow/plugin-log.jsonl`, outside every repo. `plugin-log.ps1 summary` prints the overview.
 
 ## 4. Running the scripts
 

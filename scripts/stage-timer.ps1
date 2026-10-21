@@ -66,22 +66,25 @@ switch ($Action) {
         Write-Host "TIMER_FINISHED $Ticket $($entry.stage): $minutes min, $UserTurns user turns"
     }
     'show' {
-        $rows = @($state.history) | Where-Object { $_ } | Group-Object stage | ForEach-Object {
-            $timed = @($_.Group | Where-Object { $_.source -eq 'timer' })
-            [pscustomobject]@{
-                Stage = $_.Name; Runs = $_.Count
-                Minutes = [math]::Round((($timed | Measure-Object minutes -Sum).Sum), 1)
-                UserTurns = ($timed | Measure-Object userTurns -Sum).Sum
-                Measured = if ($timed.Count -eq $_.Count) { 'yes' } elseif ($timed.Count -eq 0) { 'no (approx/missing)' } else { 'partly' }
-            }
+        $timingFile = Join-Path $dir 'timing.json'
+        $entries = @()
+        if (Test-Path $timingFile) {
+            $entries = @((Get-Content $timingFile -Raw | ConvertFrom-Json).entries | Where-Object { $_ } | ForEach-Object {
+                [pscustomobject]@{ stage = $_.stage; wall = [double]$_.wallMinutes; active = [double]$_.activeMinutes; turns = [int]$_.userTurns; src = 'auto' } })
         }
-        Write-Host ('{0,-14} {1,4} {2,8} {3,9}  {4}' -f 'Stage', 'Runs', 'Minutes', 'UserTurns', 'Measured')
-        foreach ($row in $rows) {
-            Write-Host ('{0,-14} {1,4} {2,8} {3,9}  {4}' -f $row.Stage, $row.Runs, $row.Minutes, $row.UserTurns, $row.Measured)
+        foreach ($h in @($state.history) | Where-Object { $_ -and $_.source -eq 'timer' }) {
+            $entries += [pscustomobject]@{ stage = $h.stage; wall = [double]$h.minutes; active = [double]$h.minutes; turns = [int]$h.userTurns; src = 'manual' }
         }
-        $total = ($rows | Measure-Object Minutes -Sum).Sum
-        Write-Host ("TOTAL measured: {0} min ({1:N1} h). Rows with Measured != yes were not timed by this script." -f $total, ($total / 60))
-        $running = $state.PSObject.Properties['running']
-        if ($running -and $running.Value) { Write-Host "RUNNING: $($running.Value.stage) since $($running.Value.startedAt)" }
+        if (-not $entries.Count) { Write-Host "NO_TIMING: nothing recorded for $Ticket (automatic timing off, or no stage change yet)."; exit 0 }
+        Write-Host ('{0,-14} {1,4} {2,9} {3,10} {4,9}' -f 'Stage', 'Runs', 'Wall min', 'Active min', 'UserTurns')
+        $tw = 0.0; $ta = 0.0; $tt = 0
+        foreach ($name in ($entries.stage | Select-Object -Unique)) {
+            $grp = @($entries | Where-Object stage -eq $name); $g = [pscustomobject]@{ Name = $name; Count = $grp.Count }
+            $w = ($grp | Measure-Object wall -Sum).Sum; $a = ($grp | Measure-Object active -Sum).Sum; $u = ($grp | Measure-Object turns -Sum).Sum
+            $tw += $w; $ta += $a; $tt += $u
+            Write-Host ('{0,-14} {1,4} {2,9:N1} {3,10:N1} {4,9}' -f $g.Name, $g.Count, $w, $a, $u)
+        }
+        Write-Host ('{0,-14} {1,4} {2,9:N1} {3,10:N1} {4,9}' -f 'TOTAL', '', $tw, $ta, $tt)
+        Write-Host 'Wall = clock time between stage changes. Active = Claude working + your think time (gaps over 15 min not counted).'
     }
 }

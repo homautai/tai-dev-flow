@@ -129,3 +129,22 @@ function Get-MaskedValue {
     if ([string]::IsNullOrEmpty($Value)) { return '<empty>' }
     return "<hidden, $($Value.Length) chars>"
 }
+
+function Get-TrackingSettings {
+    # Tracking switches. Personal default: ~/.dev-flow/settings.json { "tracking": { "autoTiming": true, "feedbackLog": true } }
+    # A project's .dev-flow.json "tracking" block overrides it. Missing = enabled.
+    param([string]$ProjectRoot)
+    $result = [ordered]@{ autoTiming = $true; feedbackLog = $true }
+    $personal = Join-Path $HOME '.dev-flow/settings.json'
+    $sources = @()
+    if (Test-Path $personal) { try { $sources += (Get-Content $personal -Raw -Encoding UTF8 | ConvertFrom-Json) } catch { } }
+    if ($ProjectRoot) { $pc = Get-ProjectConfig -ProjectRoot $ProjectRoot; if ($pc) { $sources += $pc } }
+    foreach ($s in $sources) {
+        $t = Get-OptionalProperty $s 'tracking'
+        foreach ($k in @('autoTiming', 'feedbackLog')) {
+            $v = Get-OptionalProperty $t $k
+            if ($null -ne $v) { $result[$k] = [bool]$v }
+        }
+    }
+    return [pscustomobject]$result
+}

@@ -6,8 +6,8 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket fetch
 
-> **Timer:** first run `stage-timer.ps1 start -Ticket <KEY> -Stage fetched`, and as the very last step
-> `stage-timer.ps1 finish -Ticket <KEY> -UserTurns <n>` (workflow.md §3, Timing). Never write times by hand.
+> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
+> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
 
 
 Read `<plugin-root>/reference/workflow.md` first.

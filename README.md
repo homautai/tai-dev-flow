@@ -48,6 +48,17 @@ claude --plugin-dir "D:\tai-dev-flow"
 
 The skills are plain `SKILL.md` files, so they can also be used by other agents that support Agent Skills (e.g. GitHub Copilot in VS Code).
 
+## Automatic tracking
+
+The plugin ships Claude Code hooks (`hooks/hooks.json`) that time each ticket stage from the real clock and count
+your turns, writing `docs/tickets/KEY/timing.json`. Nothing to call by hand. Turn it off when you no longer need it:
+
+```
+pwsh -File <plugin>/scripts/tracking.ps1 off            # all projects, for you
+pwsh -File <plugin>/scripts/tracking.ps1 off -Project   # this project only
+```
+Or just ask Claude: "tắt tracking". Hooks need PowerShell 7 (`pwsh`).
+
 ## Built-in rules
 
 | Rule | File | Project override (`.dev-flow.json`) |
@@ -94,7 +105,9 @@ Tokens are never printed, logged or sent to the chat.
 | `scripts/fetch-pr.ps1 <repo> <prId> [workspace]` | Bitbucket PR metadata, diff, comments |
 | `scripts/logwork-jira.ps1 <KEY> <time> [comment] [started]` | Jira worklog |
 | `scripts/call-api.ps1 -Target dev -Method GET -Path /x -Expect 200` | API call with token from config, token masked |
-| `scripts/stage-timer.ps1 start/finish/show -Ticket KEY` | Real start/finish time per stage in state.json, and the timing table |
+| `scripts/stage-timer.ps1 show -Ticket KEY` | Timing table per stage (recorded automatically by hooks) |
+| `scripts/tracking.ps1 status/on/off` | Turn automatic timing / feedback log on or off (personal or `-Project`) |
+| `scripts/plugin-log.ps1 add/ticket-summary/summary` | Plugin evaluation log in `~/.dev-flow/plugin-log.jsonl`: corrections, rule breaks, blockers, per-ticket summaries |
 | `scripts/show-config.ps1 <file>` | Print a personal config with every secret masked |
 | `scripts/save-token.ps1 -Target dev -Token <v>` | Save a token captured from the browser login into the config (prints expiry only) |
 | `scripts/get-token.ps1 -Target dev` | Optional: OAuth2 password/client_credentials token → config (not printed) |

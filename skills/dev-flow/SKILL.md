@@ -17,8 +17,8 @@ Read `<plugin-root>/reference/workflow.md` first.
    ✅ fetched  ✅ clarified  ✅ spec (approved)  ▶ implement  ☐ review  ☐ test local  ☐ commit  ☐ test dev  ☐ test qa  ☐ api doc  ☐ log work
    Open questions: OQ2 (BA)    Last activity: 2026-10-20 14:05
    ```
-   When asked "how long" / "thời gian", run `stage-timer.ps1 show -Ticket <KEY>` and show its table as is. Do not
-   compute or estimate times yourself. Say clearly which stages were not measured.
+   When asked "how long" / "thời gian", or when the ticket is finished, run `stage-timer.ps1 show -Ticket <KEY>`
+   and show its table as is. Never compute or estimate times yourself.
 4. Continue with the next stage. Read `<plugin-root>/skills/<stage>/SKILL.md` and follow it in full.
    Read the file directly. Some stages (`setup-project`, `work-log`) cannot be auto-invoked as skills.
    `ticket-fetch` → `ticket-clarify` → `ticket-spec` → `implement` (includes `code-review`) → `api-test local`
@@ -37,6 +37,9 @@ Read `<plugin-root>/reference/workflow.md` first.
    if the ticket's changes are committed and the tree is clean, treat `commit` as done.
 7. Mark test stages done by `tested.<env>.by`: `✅` for agent-run, `✅👤` for user-verified, `⚠️ stale` when older than
    `codeChangedAt`. When the user says they tested something, follow "User-verified results" in workflow.md §7.
+When the ticket ends without `work-log` (the user says it is done), run
+   `plugin-log.ps1 ticket-summary -Ticket <KEY> -Skipped "..."` once (at `logged` it runs automatically).
+   "tắt/bật tracking" → `tracking.ps1 off|on` (add `-Feature timing|feedback`, `-Project` for this project only).
 8. When the ticket's code changes after `tested-*` (a fix or new requirement), mark the affected
    environments as needing a retest and say so.
 9. The user can jump to a stage (e.g. "test dev now"). Allow it, but point out any skipped prerequisite.

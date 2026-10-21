@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "pwsh -NoLogo -NoProfile -File \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/track.ps1\" -Event prompt", "timeout": 15 } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "pwsh -NoLogo -NoProfile -File \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/track.ps1\" -Event stop", "timeout": 15 } ] }
+    ]
+  }
+}
