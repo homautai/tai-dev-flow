@@ -15,14 +15,21 @@
   "apiTest": {
     "dir": "docs/API_test",
     "configFile": "docs/API_test/config_swagger.json",
-    "environments": ["local", "dev", "qa"],
+    "environments": [
+      "local",
+      "dev",
+      "qa"
+    ],
     "logFiles": {
       "local": "docs/API_test/API-Test-Log.md",
       "dev": "docs/API_test/API-Test-Log_dev.md",
       "qa": "docs/API_test/API-Test-Log_qa.md"
     },
     "apiDocFile": "docs/API_test/API-Comments.md",
-    "sharedEnvironmentsNeedConfirmation": ["dev", "qa"]
+    "sharedEnvironmentsNeedConfirmation": [
+      "dev",
+      "qa"
+    ]
   },
   "language": {
     "conversation": "vi",
@@ -32,5 +39,17 @@
   "tests": {
     "unitTestCommand": "",
     "buildCommand": ""
+  },
+  "testing": {
+    "$comment": "How this project is tested locally. Skills read this before running anything.",
+    "localEnvironment": "user",
+    "$localEnvironmentHelp": "user = the user starts DB/app themselves and tells the agent when ready; agent = the agent may start them with the commands below.",
+    "prerequisites": [
+      "e.g. local database running with the project's data",
+      "e.g. API running at http://localhost:5000"
+    ],
+    "startCommands": [],
+    "unitTestCommand": "",
+    "notes": ""
   }
 }

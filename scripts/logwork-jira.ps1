@@ -2,7 +2,7 @@
 .SYNOPSIS
     Log work on a Jira ticket.
 .EXAMPLE
-    pwsh -File logwork-jira.ps1 WEC-123 "2h 30m" "Implement + API test on dev"
+    pwsh -File logwork-jira.ps1 PROJ-123 "2h 30m" "Implement + API test on dev"
 #>
 param (
     [Parameter(Mandatory=$true, Position=0)]

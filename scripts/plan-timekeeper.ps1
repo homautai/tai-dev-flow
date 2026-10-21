@@ -8,7 +8,7 @@
         "holidays": [ { "date": "2026-09-02", "name": "National Day", "worked": false } ],
         "leaves":   [ { "date": "2026-09-15", "hours": 8, "type": "Annual Leave" } ],
         "skipDates":[ "2026-09-01" ],                       // days already logged in Timekeeper
-        "tickets":  [ { "key": "WEC-1", "summary": "...", "source": "WeCRM", "issueType": "Sub-task",
+        "tickets":  [ { "key": "PROJ-1", "summary": "...", "source": "Project A", "issueType": "Sub-task",
                         "parentType": "Bug", "link": "https://...", "activeFrom": "2026-09-03",
                         "activeTo": "2026-09-12", "activityTypeId": null } ] }
 

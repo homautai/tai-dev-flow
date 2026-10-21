@@ -47,11 +47,11 @@ If `.dev-flow.json` is missing, use the defaults above and suggest running `setu
 
 ```json
 {
-  "ticket": "WEC-123",
+  "ticket": "PROJ-123",
   "title": "…",
   "stage": "fetched",
   "specApproved": false,
-  "branch": "feature/WEC-123-short-name",
+  "branch": "feature/PROJ-123-short-name",
   "tested": { "local": null, "dev": null, "qa": null },
   "history": [
     { "stage": "fetched", "startedAt": "2026-10-20T09:00:00+07:00", "finishedAt": "2026-10-20T09:01:10+07:00",
@@ -79,7 +79,7 @@ Scripts are PowerShell 7 (`pwsh`) in `<plugin-root>/scripts/`. Run them from the
 find `.dev-flow.json`:
 
 ```
-pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" WEC-123 -OutDir docs/tickets/WEC-123
+pwsh -NoProfile -File "<plugin-root>/scripts/fetch-ticket.ps1" PROJ-123 -OutDir docs/tickets/PROJ-123
 ```
 
 If an Atlassian MCP server (Jira tools) is connected, it may be used instead of the Jira scripts.
@@ -108,13 +108,25 @@ If an Atlassian MCP server (Jira tools) is connected, it may be used instead of 
 Never run `git commit` or `git push`. Skills may `git add` and draft messages (`commit-draft`); the user
 commits and pushes. Creating or switching branches needs the user's OK.
 
-## 7. Shared environments
+## 7. Local testing and databases
+
+Each project tests differently; `.dev-flow.json` → `testing` says how.
+- `testing.localEnvironment = "user"` (default): the user starts databases and apps. Before a test step, show the
+  `prerequisites` checklist, **stop and wait** until the user says it is ready. Never start, restore, create or
+  drop databases yourself.
+- `testing.localEnvironment = "agent"`: you may run `startCommands`.
+- **Never create, restore, attach or drop any database, temporary or not.** There is no setting that allows it.
+  If a test needs a database that is not there, mark the case NOT RUN and tell the user what is needed.
+- Never run scripts against any database without the user's OK.
+- Report each test case honestly as PASS / FAIL / PARTIAL (what was not covered) / NOT RUN (why).
+
+## 8. Shared environments
 
 `apiTest.sharedEnvironmentsNeedConfirmation` (default `dev`, `qa`) lists environments other people use.
 On those, GET calls are free, but any POST/PUT/PATCH/DELETE needs the user's OK first (one confirmation
 for the whole planned batch is enough). Record ids of any data created so it can be cleaned up.
 
-## 8. Language
+## 9. Language
 
 `language.conversation` for talking to the user, `language.workNotes` for questions/spec/test logs,
 `language.apiDoc` for the FE API doc. Code, identifiers and commit messages stay in English.

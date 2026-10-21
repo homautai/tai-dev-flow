@@ -24,6 +24,13 @@ Read `<plugin-root>/reference/workflow.md` first.
 5. Fix until both are green. If the spec is wrong or impossible, **stop and ask**. Do not silently change the
    contract. Record agreed changes as deviations and update `spec.md`.
 
+## Local testing
+Follow `testing` in `.dev-flow.json` and workflow.md §7. If the local environment is run by the user, list the
+prerequisites and wait for "ready" before running tests that need it. **Never create, restore, attach or drop
+any database, temporary or not**: if one is missing, mark the affected cases NOT RUN and say what is needed.
+Never run scripts against a database without the user's OK. Mark test cases you could not run properly as
+PARTIAL or NOT RUN, with what is missing.
+
 ## Database
 - Add migrations, seed data and SQL scripts the way the project already does.
 - List anything that must be run manually on dev/qa in `implementation-notes.md`.

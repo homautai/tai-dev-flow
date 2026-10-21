@@ -6,7 +6,7 @@ argument-hint: "<local|dev|qa> [<JIRA-KEY>] [TC ids]"
 
 # API test
 
-Read `<plugin-root>/reference/workflow.md` first, especially §5 Secrets and §7 Shared environments.
+Read `<plugin-root>/reference/workflow.md` first, especially §5 Secrets, §7 Local testing and §8 Shared environments.
 
 ## Inputs
 - Environment: `local`, `dev`, `qa`, or any other target defined in the config (e.g. a second API).

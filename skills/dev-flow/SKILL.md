@@ -13,7 +13,7 @@ Read `<plugin-root>/reference/workflow.md` first.
 2. Read `<tickets>/<KEY>/state.json`. If it is missing, the next stage is `ticket-fetch`.
 3. Show a one-screen status:
    ```
-   WEC-123 — <title>
+   PROJ-123 — <title>
    ✅ fetched  ✅ clarified  ✅ spec (approved)  ▶ implement  ☐ review  ☐ test local  ☐ commit  ☐ test dev  ☐ test qa  ☐ api doc  ☐ log work
    Open questions: OQ2 (BA)    Last activity: 2026-10-20 14:05
    ```

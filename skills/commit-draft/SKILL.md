@@ -24,7 +24,7 @@ pushing are always the user's action. This skill stops after `git add` and the d
 3. Draft the message:
    - `<type>(<scope>): <short description>`. Types: feat, fix, docs, style, refactor, perf, test, chore, ci.
    - English only. Imperative mood. No trailing period. First line ≤ 50 characters (count it).
-   - Scope: the module or area. Put the ticket key in the body (e.g. `Refs: WEC-123`), unless the project's rule says otherwise.
+   - Scope: the module or area. Put the ticket key in the body (e.g. `Refs: PROJ-123`), unless the project's rule says otherwise.
    - Body: bullet points when there is more than one change.
    - **No names, co-author or attribution lines.**
 4. If the changes mix unrelated concerns, propose splitting them into several commits, each with its own file list and message.

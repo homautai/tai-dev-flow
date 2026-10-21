@@ -24,6 +24,9 @@ Use the git root of the current folder. Confirm it with the user if it is not ob
     `API-Comments.md`, point the config at those files. Never rename or move them.
   - Rules entry file: find `.claude/rules/rule.md`, `CLAUDE.md`, `AGENTS.md` or similar.
   - Build and unit-test commands: detect them from the solution or `package.json`, then confirm.
+  - **Local testing (`testing`):** who starts the database and app (the user, or the agent with which commands),
+    what must be running before tests (`prerequisites`), and the unit-test command. The agent never
+    creates databases, so do not ask about that.
   - Optional overrides: does the project have its own API-doc or commit rules? If so, set
     `paths.apiDocRules` / `paths.commitRules`. Otherwise leave them empty, and the plugin defaults apply.
   - Are ticket docs (`paths.tickets`) and API test logs committed in this project, or kept local?

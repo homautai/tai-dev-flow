@@ -16,19 +16,19 @@ ticket-fetch → ticket-clarify → ticket-spec ⏸ → implement → code-revie
 | Skill | Command | What it does |
 |---|---|---|
 | setup-project | `/tai-dev-flow:setup-project` | One-time project setup: `.dev-flow.json`, personal configs, `.gitignore`, rules check |
-| dev-flow | `/tai-dev-flow:dev-flow WEC-123` | Shows where a ticket stands and continues from the next stage |
-| ticket-fetch | `/tai-dev-flow:ticket-fetch WEC-123` | Jira ticket → `docs/tickets/WEC-123/ticket.md` |
-| ticket-clarify | `/tai-dev-flow:ticket-clarify WEC-123` | Asks you questions one at a time → `questions.md` (D# decisions, OQ# open questions) |
-| ticket-spec | `/tai-dev-flow:ticket-spec WEC-123` | `spec.md`: scope, AC, API contract, DB, plan, test cases (TC#) — needs your approval |
-| implement | `/tai-dev-flow:implement WEC-123` | Codes the approved spec using the **project's** rules, tests first where possible |
+| dev-flow | `/tai-dev-flow:dev-flow PROJ-123` | Shows where a ticket stands and continues from the next stage |
+| ticket-fetch | `/tai-dev-flow:ticket-fetch PROJ-123` | Jira ticket → `docs/tickets/PROJ-123/ticket.md` |
+| ticket-clarify | `/tai-dev-flow:ticket-clarify PROJ-123` | Asks you questions one at a time → `questions.md` (D# decisions, OQ# open questions) |
+| ticket-spec | `/tai-dev-flow:ticket-spec PROJ-123` | `spec.md`: scope, AC, API contract, DB, plan, test cases (TC#) — needs your approval |
+| implement | `/tai-dev-flow:implement PROJ-123` | Codes the approved spec using the **project's** rules, tests first where possible |
 | code-review | `/tai-dev-flow:code-review` or `... my-api 123` | Reviews the branch diff or a Bitbucket PR against the rules and the spec |
-| api-test | `/tai-dev-flow:api-test dev WEC-123` | Runs the spec's test cases against real APIs, appends to `API-Test-Log_<env>.md` |
-| commit-draft | `/tai-dev-flow:commit-draft WEC-123` | Stages the files and drafts a Conventional Commits message — never commits or pushes |
-| api-doc | `/tai-dev-flow:api-doc WEC-123` | FE API comment per the API documentation rules (scope, full URLs, annotated request + enum tables, real response, exact errors, Notes for FE) — draft only |
-| work-log | `/tai-dev-flow:work-log WEC-123 2h` | Logs work on **one Jira ticket** after you confirm |
+| api-test | `/tai-dev-flow:api-test dev PROJ-123` | Runs the spec's test cases against real APIs, appends to `API-Test-Log_<env>.md` |
+| commit-draft | `/tai-dev-flow:commit-draft PROJ-123` | Stages the files and drafts a Conventional Commits message — never commits or pushes |
+| api-doc | `/tai-dev-flow:api-doc PROJ-123` | FE API comment per the API documentation rules (scope, full URLs, annotated request + enum tables, real response, exact errors, Notes for FE) — draft only |
+| work-log | `/tai-dev-flow:work-log PROJ-123 2h` | Logs work on **one Jira ticket** after you confirm |
 | timekeeper-log | `/tai-dev-flow:timekeeper-log 2026-09` | Logs a **whole month to Timekeeper**: tickets from Jira (MCP/Rovo or REST), leave + holidays from SRM, 8h/day split evenly, posted through your logged-in browser |
 
-Skills without `disable-model-invocation` can also be picked up automatically, e.g. "fetch WEC-123", "test dev", "review my changes".
+Skills without `disable-model-invocation` can also be picked up automatically, e.g. "fetch PROJ-123", "test dev", "review my changes".
 
 ## Install
 

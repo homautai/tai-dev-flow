@@ -2,7 +2,7 @@
 .SYNOPSIS
     Fetch a Jira ticket and save it as Markdown.
 .EXAMPLE
-    pwsh -File fetch-ticket.ps1 -TicketId WEC-123 -OutDir docs/tickets/WEC-123
+    pwsh -File fetch-ticket.ps1 -TicketId PROJ-123 -OutDir docs/tickets/PROJ-123
 .NOTES
     Credentials: see lib/Common.ps1 (env vars, ~/.dev-flow/credentials.json, or legacy .jira/config.json).
     Jira URL:    jira.baseUrl in the project's .dev-flow.json, or -JiraBaseUrl.

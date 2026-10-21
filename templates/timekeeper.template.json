@@ -1,5 +1,5 @@
 {
-  "$comment": "PERSONAL file: copy to ~/.dev-flow/timekeeper.json. No secrets here — Timekeeper and SRM tokens stay in the browser session. Values below come from the original timekeeper-logwork skill (SiliconStack); adjust per person.",
+  "$comment": "PERSONAL file: copy to ~/.dev-flow/timekeeper.json and fill in your own values. No secrets here — Timekeeper and SRM tokens stay in the browser session.",
   "timekeeper": {
     "url": "https://timekeeper.siliconstack.com.au",
     "userId": "YOUR-TIMEKEEPER-USER-GUID",
@@ -55,15 +55,15 @@
   },
   "codes": {
     "paidLeave": {
-      "customerId": 50,
-      "reportingCodeId": 14,
+      "customerId": 0,
+      "reportingCodeId": 0,
       "activityTypeId": 3,
       "description": "Paid Leave",
       "halfDayDescription": "Paid Leave (half day)"
     },
     "publicHoliday": {
-      "customerId": 50,
-      "reportingCodeId": 14,
+      "customerId": 0,
+      "reportingCodeId": 0,
       "activityTypeId": 28,
       "description": "Public Holiday"
     },
@@ -81,47 +81,26 @@
   },
   "sources": [
     {
-      "name": "WeCRM",
-      "from": "2000-01-01",
-      "to": "2026-08-31",
-      "jiraSite": "https://siliconstack.atlassian.net",
-      "rovoCloudId": "8e4c9e9d-f2fa-4ea1-8708-55d3a201941d",
-      "jql": "project = WEC AND (assignee was currentUser() DURING (\"{start}\", \"{end}\") OR (worklogAuthor = currentUser() AND worklogDate >= \"{start}\" AND worklogDate <= \"{end}\"))",
-      "customerId": 85,
-      "reportingCodeId": 175,
+      "name": "Project A",
+      "from": "2026-01-01",
+      "to": null,
+      "jiraSite": "https://your-site.atlassian.net",
+      "rovoCloudId": null,
+      "jql": "project = PROJ AND (assignee was currentUser() DURING (\"{start}\", \"{end}\") OR (worklogAuthor = currentUser() AND worklogDate >= \"{start}\" AND worklogDate <= \"{end}\"))",
+      "customerId": 0,
+      "reportingCodeId": 0,
       "activityRule": "bugOrBugSubtask=1, else 2",
-      "descriptionFormat": "[WeCRM] {key} {summary}",
+      "descriptionFormat": "[Project A] {key} {summary}",
       "preferBackendSubtask": true,
+      "skip": "e.g. FE/QA sub-tasks, To Do items",
       "meetings": [
         {
-          "description": "[WeCRM] Daily Meeting",
+          "description": "[Project A] Daily Meeting",
           "hours": 1,
           "every": "workday",
           "activityTypeId": 3,
-          "from": "2026-01-01",
-          "to": "2026-04-30"
-        }
-      ]
-    },
-    {
-      "name": "Pentana Integrations",
-      "from": "2026-09-01",
-      "to": null,
-      "jiraSite": "https://pentana-solutions.atlassian.net",
-      "rovoCloudId": null,
-      "jql": "project = NTGRTN AND (assignee was currentUser() DURING (\"{start}\", \"{end}\") OR (worklogAuthor = currentUser() AND worklogDate >= \"{start}\" AND worklogDate <= \"{end}\"))",
-      "customerId": 44,
-      "reportingCodeId": 314,
-      "activityRule": "2",
-      "descriptionFormat": "[Pentana] Integrations - {key} {summary}",
-      "preferBackendSubtask": true,
-      "skip": "Story/Requirement in Analysis Complete, FE/QA sub-tasks, To Do items",
-      "meetings": [
-        {
-          "description": "[Pentana] Integrations - Weekly Standup",
-          "hours": 1,
-          "every": "firstWorkdayOfWeek",
-          "activityTypeId": 3
+          "from": null,
+          "to": null
         }
       ]
     }
