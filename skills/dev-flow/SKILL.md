@@ -7,41 +7,29 @@ disable-model-invocation: true
 
 # Dev flow (orchestrator)
 
-Read `<plugin-root>/reference/workflow.md` first.
+Read `<plugin-root>/reference/core.md` first.
 
-1. If `.dev-flow.json` is missing, offer `setup-project` first. You may continue with the defaults if the user prefers.
-2. Read `<tickets>/<KEY>/state.json`. If it is missing, the next stage is `ticket-fetch`.
-3. Show a one-screen status:
+1. **Setup:** if `.dev-flow.json` is missing, stop and offer `/tai-dev-flow:setup-project`. Do not continue with guessed
+   folders.
+2. **State:** read `<tickets dir>/<KEY>/state.json`. Missing → the next stage is `ticket-fetch`.
+3. **Status** (one screen):
    ```
    PROJ-123 — <title>
    ✅ fetched  ✅ clarified  ✅ spec (approved)  ▶ implement  ☐ review  ☐ test local  ☐ commit  ☐ test dev  ☐ test qa  ☐ api doc  ☐ log work
    Open questions: OQ2 (BA)    Last activity: 2026-10-20 14:05
    ```
-   When asked "how long" / "thời gian", or when the ticket is finished, run `stage-timer.ps1 show -Ticket <KEY>`
-   and show its table as is. Never compute or estimate times yourself.
-4. Continue with the next stage. Read `<plugin-root>/skills/<stage>/SKILL.md` and follow it in full.
-   Read the file directly. Some stages (`setup-project`, `work-log`) cannot be auto-invoked as skills.
-   `ticket-fetch` → `ticket-clarify` → `ticket-spec` → `implement` (includes `code-review`) → `api-test local`
-   → `commit-draft` (the user commits, pushes and deploys) → `api-test dev` → `api-test qa` → `api-doc` → `work-log`.
+   Test stages: `✅` agent-run, `✅👤` user-verified, `⚠️ stale` when `tested.<env>.at` is older than `codeChangedAt`.
+   Commit is not stored in state: it is done when `git log --oneline --grep <KEY>` shows it and the tree is clean.
+4. **Continue** with the next stage: read `<plugin-root>/skills/<stage>/SKILL.md` and follow it in full (read the file
+   directly; `setup-project` and `work-log` cannot be auto-invoked). Order:
+   `ticket-fetch → ticket-clarify → ticket-spec → implement (incl. code-review) → api-test local → commit-draft
+   (user commits, pushes, deploys) → api-test dev → api-test qa → api-doc → work-log`.
    Skip environments the project or ticket does not use (`apiTest.environments`, TC env columns).
-5. Stop at every gate:
-   - spec approval
-   - review findings
-   - writes on shared environments
-   - API doc review
-   - work log confirmation
-   - anything that needs a deploy the user must do
-
-   Tell the user exactly what you are waiting for.
-6. Commit status is not stored in `state.json`. Check `git log --oneline --grep <KEY>` and `git status`:
-   if the ticket's changes are committed and the tree is clean, treat `commit` as done.
-7. Mark test stages done by `tested.<env>.by`: `✅` for agent-run, `✅👤` for user-verified, `⚠️ stale` when older than
-   `codeChangedAt`. When the user says they tested something, follow "User-verified results" in workflow.md §7.
-When the ticket ends without `work-log` (the user says it is done), run
-   `plugin-log.ps1 ticket-summary -Ticket <KEY> -Skipped "..."` once (at `logged` it runs automatically).
-   "tắt/bật tracking" → `tracking.ps1 off|on` (add `-Feature timing|feedback`, `-Project` for this project only).
-8. When the ticket's code changes after `tested-*` (a fix or new requirement), mark the affected
-   environments as needing a retest and say so.
-9. The user can jump to a stage (e.g. "test dev now"). Allow it, but point out any skipped prerequisite.
-10. **Small change mode:** for a small bug fix, the user may say to skip clarify/spec. Then write a 5-line
-   `spec.md` (problem, fix, test cases), mark it `APPROVED (small change)` with their OK, and continue from `implement`.
+5. **Gates:** stop at spec approval, review findings, writes on shared environments, API doc review, work-log
+   confirmation, and anything needing a deploy by the user. Say exactly what you are waiting for.
+6. **Retests:** when the ticket's code changes after a `tested-*` stage, mark those environments stale and say so.
+   When the user says they tested something themselves, follow `<plugin-root>/reference/testing.md` (user-verified results).
+7. **Jumps:** the user may jump to a stage ("test dev now"); allow it and point out skipped prerequisites.
+8. **Small change mode:** for a small fix the user may skip clarify/spec: write a 5-line `spec.md` (problem, fix,
+   test cases), mark it `APPROVED (small change)` with their OK, continue from `implement`.
+9. **Time / tracking questions** ("bao lâu", "tắt tracking", "plugin log"): follow `<plugin-root>/reference/tracking.md`.

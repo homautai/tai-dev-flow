@@ -6,14 +6,9 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket fetch
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
+Read `<plugin-root>/reference/core.md` first.
 
-
-Read `<plugin-root>/reference/workflow.md` first.
-
-1. Normalise the key to upper case. The ticket folder is `<tickets dir>/<KEY>/` (workflow.md §2: inside the
-   workspace when `workspace` is set).
+1. Normalise the key to upper case. The ticket folder is `<tickets dir>/<KEY>/` (see core: Paths).
 2. If `state.json` already exists, report the current stage and ask: refetch (keeps the other files), or
    continue with `dev-flow`? On refetch, compare the new `ticket.md` with the previous one. If the
    description, AC or comments changed after the spec was approved, list the changes and flag the spec
@@ -27,7 +22,7 @@ Read `<plugin-root>/reference/workflow.md` first.
 4. Read `ticket.md`. If there is a parent, epic or "blocks / is blocked by" link that the ticket clearly
    depends on, list them and ask whether to fetch them too. Fetched linked tickets go into the cache, not
    into this ticket's folder.
-5. Write `state.json` with stage `fetched` (schema in workflow.md).
+5. Write `state.json` with stage `fetched`.
 6. Reply with:
    - a summary of at most 5 lines: what is being asked, who reported it, status
    - the acceptance criteria as written, or "none written" if there are none

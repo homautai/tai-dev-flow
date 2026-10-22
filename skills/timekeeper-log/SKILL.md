@@ -8,7 +8,7 @@ disable-model-invocation: true
 # Timekeeper log (monthly)
 
 Read first:
-- `<plugin-root>/reference/workflow.md` (`<plugin-root>` = two folders above this file). §5 Secrets applies.
+- `<plugin-root>/reference/core.md` (`<plugin-root>` = two folders above this file). Its Safety rules apply.
 - `references/browser-snippets.md`: the in-page JavaScript used for SRM and Timekeeper.
 
 Personal config: `~/.dev-flow/timekeeper.json` (template `<plugin-root>/templates/timekeeper.template.json`).

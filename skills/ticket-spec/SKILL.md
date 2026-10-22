@@ -6,11 +6,7 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket spec
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
-
-
-Read `<plugin-root>/reference/workflow.md` first. Inputs: `ticket.md`, `questions.md`, the rules index, and the code explored during clarification.
+Read `<plugin-root>/reference/core.md` first. Inputs: `ticket.md`, `questions.md`, the rules index, and the code explored during clarification.
 
 0. **Investigation (bugs, performance, unclear root cause).** If the fix depends on facts nobody knows
    yet (where the time goes, which query is slow, why a value is wrong), first propose a short

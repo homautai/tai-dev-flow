@@ -7,9 +7,10 @@ disable-model-invocation: true
 
 # Setup project
 
-Read `<plugin-root>/reference/workflow.md` first (`<plugin-root>` = two folders above this file).
+Read `<plugin-root>/reference/core.md` and `<plugin-root>/reference/workspace.md` first (`<plugin-root>` = two folders above this file).
 
-Work through the checklist below in order. Ask one question at a time and always propose a default.
+Work through the checklist below in order. Ask one question at a time; propose a recommendation, but apply nothing
+the user has not confirmed.
 Show every file before writing it and write only after the user agrees.
 
 ## 1. Project root
@@ -27,7 +28,7 @@ Use the git root of the current folder. Confirm it with the user if it is not ob
     3. inside this repo (`docs/…`, older setup; must then be git-ignored).
     If a sibling repo already has a `.dev-flow.json` with a workspace, propose reusing that same one.
     Write the answer to `workspace` (relative to the repo, or absolute). Then `paths.tickets` = `tickets` and
-    `apiTest.*` = `API_test/<repo name>/...` (relative to the workspace, workflow.md §2). Create the folder only after
+    `apiTest.*` = `API_test/<repo name>/...` (relative to the workspace). Create the folder only after
     the user confirms.
   - If the repo already has `docs/tickets/` or `docs/API_test/` from an older setup, offer to **move** them into the
     workspace (`mv -n`, show the list first, never overwrite), then remove their ignore lines.
@@ -39,8 +40,6 @@ Use the git root of the current folder. Confirm it with the user if it is not ob
     creates databases, so do not ask about that.
   - Optional overrides: does the project have its own API-doc or commit rules? If so, set
     `paths.apiDocRules` / `paths.commitRules`. Otherwise leave them empty, and the plugin defaults apply.
-  - Are ticket docs (`paths.tickets`) and API test logs committed in this project, or kept local?
-    If kept local, add them to `.gitignore` in step 5.
 
 ## 3. Personal Atlassian credentials (never committed)
 Check `~/.dev-flow/credentials.json` and the env vars `DEVFLOW_ATLASSIAN_EMAIL` / `DEVFLOW_JIRA_API_TOKEN` /

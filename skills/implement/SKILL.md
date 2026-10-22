@@ -6,11 +6,7 @@ argument-hint: "<JIRA-KEY>"
 
 # Implement
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
-
-
-Read `<plugin-root>/reference/workflow.md` first.
+Read `<plugin-root>/reference/core.md` first, and `<plugin-root>/reference/testing.md` before running tests.
 
 ## Preconditions
 - `spec.md` exists and `state.json.specApproved` is `true`. If not, stop and offer `ticket-spec`.
@@ -29,13 +25,9 @@ Read `<plugin-root>/reference/workflow.md` first.
    contract. Record agreed changes as deviations and update `spec.md`.
 
 ## Local testing
-Follow `testing` in `.dev-flow.json` and workflow.md §7. If the local environment is run by the user, list the
-prerequisites and wait for "ready" before running tests that need it. **Never create, restore, attach or drop
-any database, temporary or not**: if one is missing, mark the affected cases NOT RUN and say what is needed.
-Never run scripts against a database without the user's OK.
-When the user tests some cases themselves, record them as user-verified (workflow.md §7, "User-verified results").
-Every time you change the ticket's code, set `state.json.codeChangedAt` to the current time. Mark test cases you could not run properly as
-PARTIAL or NOT RUN, with what is missing.
+Follow `testing` in `.dev-flow.json` (`<plugin-root>/reference/testing.md`): if the user runs the environment, list the prerequisites
+and wait for "ready". Cases the user tested themselves are recorded as user-verified. Set `state.json.codeChangedAt`
+whenever you change the ticket's code.
 
 ## Database
 - Add migrations, seed data and SQL scripts the way the project already does.

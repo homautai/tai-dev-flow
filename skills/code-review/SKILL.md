@@ -6,11 +6,7 @@ argument-hint: "[<repo> <pr-id>]"
 
 # Code review
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
-
-
-Read `<plugin-root>/reference/workflow.md` first.
+Read `<plugin-root>/reference/core.md` first.
 
 ## What to review
 - **No arguments:** the current branch vs its base (`git merge-base` with `develop`/`main`), plus uncommitted changes.
@@ -38,7 +34,7 @@ A table sorted by severity:
 
 Severity is one of: **Blocker** (bug, security, data loss), **Major** (rule violation with real impact), **Minor**, **Suggestion**.
 
-- With a ticket context, save the table to `<tickets>/<KEY>/review.md` and set the stage to `reviewed`
+- With a ticket context, save the table to `<tickets dir>/<KEY>/review.md` and set the stage to `reviewed`
   once the blockers and majors are fixed.
 - For your own changes in this session, offer to fix them. For a colleague's PR, draft the review
   comments but never post them yourself.

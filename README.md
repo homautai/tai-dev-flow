@@ -119,7 +119,7 @@ Tokens are never printed, logged or sent to the chat.
 | `scripts/call-api.ps1 -Target dev -Method GET -Path /x -Expect 200` | API call with token from config, token masked |
 | `scripts/stage-timer.ps1 show -Ticket KEY` | Timing table per stage (recorded automatically by hooks) |
 | `scripts/tracking.ps1 status/on/off` | Turn automatic timing / feedback log on or off (personal or `-Project`) |
-| `scripts/plugin-log.ps1 add/ticket-summary/summary` | Plugin evaluation log in `~/.dev-flow/plugin-log.jsonl`: corrections, rule breaks, blockers, per-ticket summaries |
+| `scripts/plugin-log.ps1 add/ticket-summary/summary` | Plugin evaluation log in `~/.dev-flow/plugin-log.jsonl`: per-ticket summaries (automatic at `logged`), plus notes you ask Claude to add |
 | `scripts/show-config.ps1 <file>` | Print a personal config with every secret masked |
 | `scripts/save-token.ps1 -Target dev -Token <v>` | Save a token captured from the browser login into the config (prints expiry only) |
 | `scripts/get-token.ps1 -Target dev` | Optional: OAuth2 password/client_credentials token → config (not printed) |
@@ -133,7 +133,7 @@ Tokens are never printed, logged or sent to the chat.
 skills/<name>/    SKILL.md for each step
 scripts/          PowerShell scripts (+ lib/)
 templates/        project/personal config templates and document templates
-reference/        workflow.md — shared conventions every skill follows
+reference/        core.md (read by every skill) + workspace.md, testing.md, tracking.md (read on demand)
 ```
 
 ## Versioning

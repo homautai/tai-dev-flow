@@ -6,17 +6,13 @@ argument-hint: "<local|dev|qa> [<JIRA-KEY>] [TC ids]"
 
 # API test
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
-
-
-Read `<plugin-root>/reference/workflow.md` first, especially §5 Secrets, §7 Local testing and §8 Shared environments.
+Read `<plugin-root>/reference/core.md` first (Safety applies throughout), and `<plugin-root>/reference/testing.md` for local runs.
 
 ## Inputs
 - Environment: `local`, `dev`, `qa`, or any other target defined in the config (e.g. a second API).
 - Ticket: from the argument or the current ticket context. Run the test cases in `spec.md` that list this
   environment, or the TC ids given. Without a spec, agree on a short list of cases with the user first.
-- Config: `apiTest.configFile`. Inspect it only with `pwsh -NoProfile -File "<plugin-root>/scripts/show-config.ps1" <file>`.
+- Config: `apiTest.configFile`, inspected only with `show-config.ps1`.
 - Swagger: if the config has `swaggerPath`, download it with
   `call-api.ps1 -Target <env> -Path <swaggerPath> -NoAuth -OutFile <cache dir>/swagger-<env>.json`
   (drop `-NoAuth` if it needs a token). Use it to confirm routes and schemas before building request bodies.
@@ -51,8 +47,7 @@ pwsh -NoProfile -File "<plugin-root>/scripts/call-api.ps1" -Target <env> -Method
 - Exit codes: 0 pass, 1 unexpected status, 2 network error, 3 no token, 4 token expired (log in again).
 - Check the body, not only the status: compare the key fields against the TC's expected result.
 - Chain cases where needed. For example, create, then GET the created id, then verify the fields.
-- On `dev`/`qa` (shared): GETs are free. Before any write, show the planned write calls and get **one**
-  OK for the batch. Record created ids for cleanup.
+- Shared environments: see core (one OK for the batch of writes, record created ids).
 
 ## When a case fails
 Diagnose before concluding:
@@ -78,11 +73,10 @@ Conclusion. If the log file already exists, follow the labels it already uses.
 Never write tokens or Authorization headers. Anonymise personal data if it is real customer data.
 
 ## User-verified cases
-If the user already tested some cases themselves, do not re-run them: record them as user-verified
-(workflow.md §7, "User-verified results") and run only the rest.
+Cases the user already tested are recorded as user-verified (`<plugin-root>/reference/testing.md`), not re-run.
 
 ## Finish
-Report as `passed / failed / skipped per TC`. Update `state.json` with `tested.<env>` = `{at, passed, failed}`
+Report as `passed / failed / skipped per TC`. Update `state.json` with `tested.<env>` (`by: "agent"`, cases, counts)
 and the stage `tested-<env>` when everything passed. Next step:
 - after local passes: `commit-draft`, then the user commits, pushes and deploys, then `api-test dev`
 - after all target environments pass: `api-doc`

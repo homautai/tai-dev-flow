@@ -6,12 +6,8 @@ argument-hint: "<JIRA-KEY>"
 
 # API doc for FE
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
-
-
 Read first:
-- `<plugin-root>/reference/workflow.md`
+- `<plugin-root>/reference/core.md`
 - **`references/api-documentation.md`**. These are the rules (§1–§6). This file only describes the steps.
   If `paths.apiDocRules` is set in `.dev-flow.json`, read that file too. Where the two differ, the project's file wins.
 

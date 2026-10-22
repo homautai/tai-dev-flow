@@ -6,11 +6,7 @@ argument-hint: "<JIRA-KEY>"
 
 # Ticket clarify (grill)
 
-> **Tracking:** timing is automatic; just update `state.json.stage` when this stage ends. If feedback logging is on,
-> log each user correction, rule break or blocker with `plugin-log.ps1 add` (workflow.md §3).
-
-
-Read `<plugin-root>/reference/workflow.md` first. Inputs: `<tickets>/<KEY>/ticket.md` and any existing `questions.md`.
+Read `<plugin-root>/reference/core.md` first. Inputs: `<tickets dir>/<KEY>/ticket.md` and any existing `questions.md`.
 
 ## Before asking anything: a budget of 6 tool calls, then ask
 Questions come first; code reading is only there to make the questions sharper.
@@ -30,7 +26,7 @@ investigation step of `ticket-spec` and runs only with the user's OK.
 
 ## Small tickets first
 Before the first real question, judge the size from `ticket.md`. If it looks small (one script, one bug in one
-place, no API/contract change), offer **small change mode** first (dev-flow §10): a 5-line spec and straight to
+place, no API/contract change), offer **small change mode** first (dev-flow step 8): a 5-line spec and straight to
 implement. Ask it as the first question, with your recommendation; continue clarifying only if the user wants.
 
 ## How to ask
