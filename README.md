@@ -3,13 +3,40 @@
 A Claude Code plugin that standardises a backend developer's ticket workflow, from Jira ticket to FE handoff:
 
 ```
-setup-project (once per project)
-
-ticket-fetch → ticket-clarify → ticket-spec ⏸ → implement → code-review ⏸ → api-test local
-            → commit-draft ⏸ (you commit/push/deploy) → api-test dev → api-test qa → api-doc ⏸ → work-log ⏸
+setup-project          (once per project)
+ticket-fetch
+ticket-clarify
+ticket-spec        ⏸
+implement
+code-review        ⏸
+api-test local
+commit-draft       ⏸   you commit / push / deploy
+api-test dev
+api-test qa
+api-doc            ⏸
+work-log           ⏸
 ```
 
 ⏸ = stops and waits for your approval. `dev-flow <KEY>` runs or resumes the whole chain.
+
+### What each step does
+
+| # | Step | What happens | Output | Waits for you |
+|---|---|---|---|---|
+| 0 | setup-project | Once per repo: asks where the workspace lives, writes `.dev-flow.json`, git excludes, testing mode, checks rules and credentials | `<repo>/.dev-flow.json` | Answers to setup questions |
+| 1 | ticket-fetch | Pulls the Jira ticket (description, AC, comments, links) | `tickets/KEY/ticket.md`, `state.json` | – |
+| 2 | ticket-clarify | Asks one question at a time (with a recommended answer) until every decision is made; offers small change mode for tiny tickets | `tickets/KEY/questions.md` (D# decisions, OQ# open questions) | Your answers |
+| 3 | ticket-spec | Investigates the code (with your OK), writes scope, AC, API contract, DB changes, plan, numbered test cases | `tickets/KEY/spec.md` | ⏸ Approve the spec |
+| 4 | implement | Codes the approved spec with the project's rules, tests first where possible, builds and runs tests; never commits | Code changes, `tickets/KEY/implementation-notes.md` | – |
+| 5 | code-review | Reviews the diff against the project rules and the spec, by severity with file:line | `tickets/KEY/review.md` | ⏸ Choose which findings to fix |
+| 6 | api-test local | Runs the spec's test cases against your local API (or records your own results if you test yourself) | API test log (local), `API_test/<repo>/` | – |
+| 7 | commit-draft | Stages the ticket's files and drafts a Conventional Commits message | Staged files + message | ⏸ You commit, push, deploy |
+| 8 | api-test dev | Same test cases on dev; writes on shared data need one OK per batch | API test log (dev) | OK for write batches |
+| 9 | api-test qa | Same on qa | API test log (qa) | OK for write batches |
+| 10 | api-doc | Writes the FE-facing API comment (full URLs, annotated request, real response, errors, notes for FE) | API comments file (draft) | ⏸ You post it to Jira |
+| 11 | work-log | Logs time on the Jira ticket, suggesting the measured active time | Jira worklog | ⏸ Confirm hours |
+
+Paths are inside your workspace. Steps that don't apply are skipped (e.g. no API change → no api-test / api-doc). Timing per step is recorded automatically in `timing.json`.
 
 ## Skills
 
