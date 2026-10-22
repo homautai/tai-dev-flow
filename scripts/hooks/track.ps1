@@ -26,7 +26,8 @@ try {
     if (-not (Get-TrackingSettings -ProjectRoot $root).autoTiming) { exit 0 }
 
     $now = Get-Date
-    $idleCapSeconds = 15 * 60
+    $idleCapSeconds = 15 * 60          # user think time counted at most 15 min per gap
+    $turnCapSeconds = 120 * 60         # one Claude turn counted at most 2 h
 
     # --- session counters -------------------------------------------------
     $trackDir = Join-Path $HOME '.dev-flow/tracking'
@@ -42,25 +43,35 @@ try {
     $activeAtTurnStart = [double]$sess.activeSeconds
 
     if ($Event -eq 'prompt') {
+        $pending = ToDate $sess.lastPromptAt
         $lastStop = ToDate $sess.lastStopAt
-        if ($lastStop) { $sess.activeSeconds = [double]$sess.activeSeconds + [math]::Min(($now - $lastStop).TotalSeconds, $idleCapSeconds) }
+        if ($pending) {
+            # Previous turn never ended (user pressed Esc: no Stop hook). Count it at most like an idle gap.
+            $sess.activeSeconds = [double]$sess.activeSeconds + [math]::Min([math]::Max(0, ($now - $pending).TotalSeconds), $idleCapSeconds)
+        }
+        elseif ($lastStop) { $sess.activeSeconds = [double]$sess.activeSeconds + [math]::Min(($now - $lastStop).TotalSeconds, $idleCapSeconds) }
         $activeAtTurnStart = [double]$sess.activeSeconds
         $sess.prompts = [int]$sess.prompts + 1
         $sess.lastPromptAt = $now.ToString('o')
     } else {
         $lastPrompt = ToDate $sess.lastPromptAt
-        if ($lastPrompt) { $sess.activeSeconds = [double]$sess.activeSeconds + [math]::Max(0, ($now - $lastPrompt).TotalSeconds) }
+        if ($lastPrompt) { $sess.activeSeconds = [double]$sess.activeSeconds + [math]::Min([math]::Max(0, ($now - $lastPrompt).TotalSeconds), $turnCapSeconds) }
         $sess.lastStopAt = $now.ToString('o')
         $sess.lastPromptAt = $null   # this turn is accounted for
     }
     $sess | ConvertTo-Json | Set-Content $sessFile -Encoding utf8
 
     # --- stage transitions (checked at the end of every turn and before every prompt) ----------
-    if (-not (Get-ProjectConfig -ProjectRoot $root)) { exit 0 }   # project not set up: nothing to track
-    $ticketsDir = Get-TicketsDir -ProjectRoot $root
-    if (-not (Test-Path $ticketsDir)) { exit 0 }
+    # Ticket folders to scan: the current project's; if Claude is outside any set-up project (it moved to another
+    # folder), every workspace used before, so stage changes are still recorded.
+    $dirs = @()
+    if (Get-ProjectConfig -ProjectRoot $root) { $dirs += Get-TicketsDir -ProjectRoot $root }
+    else { $dirs += @(Get-WorkspaceRegistry | ForEach-Object { $_.ticketsDir }) }
+    $dirs = @($dirs | Where-Object { $_ -and (Test-Path $_) } | Sort-Object -Unique)
+    if (-not $dirs.Count) { exit 0 }
 
-    foreach ($stateFile in Get-ChildItem -Path $ticketsDir -Filter 'state.json' -Recurse -Depth 1 -ErrorAction SilentlyContinue) {
+    $stateFiles = foreach ($d in $dirs) { Get-ChildItem -Path $d -Filter 'state.json' -Recurse -Depth 1 -ErrorAction SilentlyContinue }
+    foreach ($stateFile in $stateFiles) {
         $ticketDir = $stateFile.DirectoryName
         $timingFile = Join-Path $ticketDir 'timing.json'
         $timing = if (Test-Path $timingFile) { Get-Content $timingFile -Raw | ConvertFrom-Json } else { $null }
@@ -92,6 +103,7 @@ try {
             $from = ToDate $timing.lastAt
             $sameSession = ($timing.sessionAtLast -eq $sessionId)
             $active = if ($sameSession) { [double]$sess.activeSeconds - [double]$timing.activeAtLast } else { [double]$sess.activeSeconds }
+            $active = [math]::Min($active, ($now - $from).TotalSeconds)   # active can never exceed wall-clock
             $turns = if ($sameSession) { [int]$sess.prompts - [int]$timing.promptsAtLast } else { [int]$sess.prompts }
             $entry = [pscustomobject]@{
                 stage = $stage; startedAt = $from.ToString('o'); finishedAt = $now.ToString('o')
@@ -107,7 +119,7 @@ try {
                 $timing.checkedAt = $now.ToString('o')
                 $timing | ConvertTo-Json -Depth 10 | Set-Content $timingFile -Encoding utf8
                 Push-Location $root
-                try { & (Join-Path $PSScriptRoot '../plugin-log.ps1') ticket-summary -Ticket $key *> $null } catch { } finally { Pop-Location }
+                try { & (Join-Path $PSScriptRoot '../plugin-log.ps1') ticket-summary -Ticket $key -TicketsDir (Split-Path -Parent $ticketDir) *> $null } catch { } finally { Pop-Location }
             }
         }
         $timing.checkedAt = $now.ToString('o')

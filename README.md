@@ -48,6 +48,12 @@ claude --plugin-dir "D:\tai-dev-flow"
 
 The skills are plain `SKILL.md` files, so they can also be used by other agents that support Agent Skills (e.g. GitHub Copilot in VS Code).
 
+## Safety hook
+
+A `PreToolUse` hook (`scripts/hooks/guard.ps1`) blocks shell commands that could wipe local-only work: any `git clean`,
+and recursive deletes that target a workspace, a `.dev-flow` folder, a parent path, an absolute path outside the
+current repo, or that run outside a git repo. Claude then has to ask you instead. It is always on.
+
 ## Automatic tracking
 
 The plugin ships Claude Code hooks (`hooks/hooks.json`) that time each ticket stage from the real clock and count

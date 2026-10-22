@@ -145,7 +145,30 @@ function Get-TicketsDir {
     Assert-ProjectConfig -ProjectRoot $ProjectRoot -ProjectConfig $pc
     $rel = Get-OptionalProperty (Get-OptionalProperty $pc 'paths') 'tickets'
     if (-not $rel) { $rel = if (Get-OptionalProperty $pc 'workspace') { 'tickets' } else { 'docs/tickets' } }
-    return Resolve-FlowPath -ProjectRoot $ProjectRoot -Relative $rel -ProjectConfig $pc
+    $dir = Resolve-FlowPath -ProjectRoot $ProjectRoot -Relative $rel -ProjectConfig $pc
+    Register-Workspace -TicketsDir $dir -WorkspaceRoot (Get-WorkspaceRoot -ProjectRoot $ProjectRoot -ProjectConfig $pc)
+    return $dir
+}
+
+function Get-WorkspaceRegistry {
+    # Known ticket folders / workspaces (~/.dev-flow/tracking/workspaces.json). Used by the hooks so they work
+    # whatever folder Claude is in, and to protect workspaces from deletion.
+    $file = Join-Path $HOME '.dev-flow/tracking/workspaces.json'
+    if (-not (Test-Path $file)) { return @() }
+    try { return @((Get-Content $file -Raw | ConvertFrom-Json) | Where-Object { $_ }) } catch { return @() }
+}
+
+function Register-Workspace {
+    param([string]$TicketsDir, [string]$WorkspaceRoot)
+    try {
+        $file = Join-Path $HOME '.dev-flow/tracking/workspaces.json'
+        $list = @(Get-WorkspaceRegistry)
+        if ($list | Where-Object { $_.ticketsDir -eq $TicketsDir }) { return }
+        $dir = Split-Path -Parent $file
+        if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+        $list += [pscustomobject]@{ ticketsDir = $TicketsDir; workspaceRoot = $WorkspaceRoot; added = (Get-Date).ToString('o') }
+        ConvertTo-Json -InputObject @($list) -Depth 5 | Set-Content $file -Encoding utf8
+    } catch { }
 }
 
 function Get-ApiConfigPath {

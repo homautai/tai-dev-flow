@@ -22,10 +22,18 @@ Set-StrictMode -Off
 
 $Ticket = $Ticket.Trim().ToUpper()
 if (-not $TicketsDir) {
-    $TicketsDir = Get-TicketsDir -ProjectRoot (Find-ProjectRoot)
+    $root = Find-ProjectRoot
+    if (Get-ProjectConfig -ProjectRoot $root) { $TicketsDir = Get-TicketsDir -ProjectRoot $root }
+    else {
+        # Not inside a set-up project: look for the ticket in the known workspaces.
+        $hit = @(Get-WorkspaceRegistry | Where-Object { Test-Path (Join-Path $_.ticketsDir $Ticket) } | Select-Object -First 1)
+        if (-not $hit) { throw "Ticket $Ticket not found: run from the project folder, or set it up with setup-project." }
+        $TicketsDir = $hit[0].ticketsDir
+    }
 }
 $dir = Join-Path $TicketsDir $Ticket
 $file = Join-Path $dir 'state.json'
+if ($Action -eq 'show' -and -not (Test-Path $dir)) { Write-Host "NO_TIMING: no folder for $Ticket."; exit 0 }
 if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
 
 $state = if (Test-Path $file) { Get-Content $file -Raw -Encoding UTF8 | ConvertFrom-Json } else { [pscustomobject]@{ ticket = $Ticket; stage = $null } }

@@ -29,6 +29,10 @@ Scripts: `pwsh -NoProfile -File "<plugin-root>/scripts/<name>.ps1" …` (PowerSh
 - **Git:** never `git commit` / `git push`; `commit-draft` stages and drafts, the user commits. Branch changes need OK.
 - **Databases:** never create, restore, attach or drop any database (temporary included). Never run scripts against a
   database without the user's OK. Missing environment → mark the test NOT RUN and say what is needed.
+- **Deleting:** delete only files that are part of the ticket's code change, inside the repo. Never delete or "clean
+  up" the workspace, ticket folders, API test files, caches, personal configs or anything outside the repo; never run
+  `git clean`. A plugin hook blocks such commands — if blocked, do not work around it: tell the user what you
+  wanted to delete and why, and let them do it.
 - **Shared environments** (`apiTest.sharedEnvironmentsNeedConfirmation`, default dev/qa): GET is free; POST/PUT/PATCH/
   DELETE need one OK for the planned batch; record created ids.
 - Report tests honestly: PASS / FAIL / PARTIAL (what is missing) / NOT RUN (why).
